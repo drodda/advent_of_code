@@ -15,12 +15,23 @@ def read_list_int(file_path, strip=True):
     return [int(line) for line in lines]
 
 
+__DEBUG_PRINT = False
+
+
+def print_debug(text):
+    if __DEBUG_PRINT:
+        print(text)
+
+
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="Use test data", action="store_true")
+    parser.add_argument("--debug", help="Debug output", action="store_true")
     if args_func:
         args_func(parser)
     args = parser.parse_args()
+    global __DEBUG_PRINT
+    __DEBUG_PRINT = args.debug
     return args
 
 
