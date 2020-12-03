@@ -3,9 +3,9 @@ import os
 import sys
 
 
-def read_lines(file_path, strip=True):
-    lines = open(file_path).readlines()
-    if strip:
+def read_lines(file_path, strip_empty=True):
+    lines = open(file_path).read().splitlines()
+    if strip_empty:
         lines = [line for line in lines if line]
     return lines
 

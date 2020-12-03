@@ -8,8 +8,6 @@ import re
 
 from utils import *
 
-TARGET_SUM = 2020
-
 
 def parse_data_line(line):
     match = re.match(r"^(\d+)-(\d+) (.): (.+)$", line)
