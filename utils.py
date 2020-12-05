@@ -35,9 +35,14 @@ def parse_args(args_func=None):
     return args
 
 
-def data_file_path(test):
-    # Get script name
-    script_base, _ = os.path.splitext(os.path.basename(sys.argv[0]))
-    data_file_suffix = "_test" if test else "_full"
-    result = os.path.join("data", f"{script_base}{data_file_suffix}.txt")
-    return result
+# Get script name
+SCRIPT_BASE, _ = os.path.splitext(os.path.basename(sys.argv[0]))
+
+
+def data_file_path(suffix, var="", ext="txt"):
+    return os.path.join("data", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
+
+
+def data_file_path_main(test):
+    suffix = "test" if test else "full"
+    return data_file_path(suffix)
