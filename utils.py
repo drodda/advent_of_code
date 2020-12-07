@@ -3,6 +3,13 @@ import os
 import sys
 
 
+def rtrim(text, trim):
+    l = len(trim)
+    if text.endswith(trim):
+        return text[:-l]
+    return text
+
+
 def read_lines(file_path, strip_empty=True):
     lines = open(file_path).read().splitlines()
     if strip_empty:
