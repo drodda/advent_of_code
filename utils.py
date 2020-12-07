@@ -4,6 +4,7 @@ import sys
 
 
 def rtrim(text, trim):
+    """ removesuffix """
     l = len(trim)
     if text.endswith(trim):
         return text[:-l]
@@ -11,15 +12,43 @@ def rtrim(text, trim):
 
 
 def read_lines(file_path, strip_empty=True):
-    lines = open(file_path).read().splitlines()
-    if strip_empty:
-        lines = [line for line in lines if line]
-    return lines
+    """ Read a file, yield a list of lines.
+        Remove empty lines if strip_empty
+    """
+    with open(file_path) as f:
+        for line in f:
+            line = line.rstrip("\r\n")
+            if strip_empty:
+                if not line:
+                    continue
+            yield line
 
 
 def read_list_int(file_path, strip=True):
+    """ Read a file of integers, one per line """
     lines = read_lines(file_path, strip)
-    return [int(line) for line in lines]
+    return map(int, lines)
+
+
+def read_multilines(file_path, join=False, join_str=" "):
+    """ Read a file of lines separated by blank lines
+        Return an array of arrays of line groups
+    """
+    item = []
+    for line in read_lines(file_path, False):
+        line = line.rstrip("\r\n")
+        if line:
+            item.append(line)
+        else:
+            if item:
+                if join:
+                    item = join_str.join(item)
+                yield item
+                item = []
+    if item:
+        if join:
+            item = join_str.join(item)
+        yield item
 
 
 __DEBUG_PRINT = False
