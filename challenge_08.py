@@ -12,23 +12,24 @@ import string
 from utils import *
 
 
-
-
-# def parse_input(filename):
-#     lines = read_lines(filename, strip_empty=True)
-#     return [parse_instruction(line) for line in lines]
-
-
-class ExecutionInfiniteLoop(Exception):
+class ExecutionException(Exception):
     pass
 
 
-class ExecutionCompleted(Exception):
-    pass
+class ExecutionInfiniteLoop(ExecutionException):
+    def __init__(self):
+        super().__init__("Infinite Loop")
 
 
-class ExecutionError(Exception):
-    pass
+class ExecutionCompleted(ExecutionException):
+    def __init__(self):
+        super().__init__("Execution Completed")
+
+
+class ExecutionError(ExecutionException):
+    def __init__(self, msg=None):
+        msg_extra = f": {msg}" if msg else ""
+        super().__init__(f"Execution Error{msg_extra}")
 
 
 class VM:
@@ -43,7 +44,7 @@ class VM:
         # Check for infinite loop
         if self.instruction_seen(instruction):
             raise ExecutionInfiniteLoop
-        print_debug(f"{self.ip}: {self.acc}: {instruction[0]} {instruction[1]}")
+        print_verbose(f"{self.ip}: {self.acc}: {instruction[0]} {instruction[1]}")
         # Mark as run
         self.instruction_set_seen(instruction)
         instruction[2] = True
@@ -113,10 +114,8 @@ def main():
         vm.run()
     except ExecutionInfiniteLoop:
         print(f"{vm.acc}")
-    except ExecutionCompleted:
-        print(f"Execution completed??")
-    except ExecutionError:
-        print(f"Execution Error??")
+    except ExecutionException as e:
+        print(f"Execution finished: {e}")
 
     print()
     print("Part 2:")
@@ -124,23 +123,31 @@ def main():
         if args.test:
             lines = read_lines(data_file_path("test", "b"))
             vm = VM(lines)
+            try:
+                vm.run()
+            except ExecutionInfiniteLoop:
+                print(f"{vm.acc}")
+            except ExecutionException as e:
+                print(f"Execution finished: {e}")
 
-    for i, instruction in enumerate(vm.instructions):
+    # Find instructions that were used in the infinite loop in Part 1
+    used_instructions = [i for i in range(len(vm.instructions)) if vm.instruction_seen(vm.get_instruction(i))]
+    for i in used_instructions:
+        instruction = vm.get_instruction(i)
         action_orig = instruction[0]
         if action_orig in ["jmp", "nop"]:
             # Swap instruction and run
             try:
-                instruction[0] = action_swap(action_orig)
+                action_new = action_swap(action_orig)
+                instruction[0] = action_new
                 vm.reset()
                 vm.run()
-            except ExecutionInfiniteLoop:
-                print(f"Swap {i}: ExecutionInfiniteLoop")
-            except ExecutionError:
-                print(f"Swap {i}: ExecutionError")
             except ExecutionCompleted:
-                print(f"Swap {i}: Execution completed")
+                print(f"Swap {i} {action_new}->{action_orig}: Execution completed")
                 print(f"{vm.acc}")
                 break
+            except ExecutionException as e:
+                print_debug(f"Swap {i} {action_new}->{action_orig}: {e}")
             instruction[0] = action_orig
 
 

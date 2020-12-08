@@ -52,6 +52,7 @@ def read_multilines(file_path, join=False, join_str=" "):
 
 
 __DEBUG_PRINT = False
+__DEBUG_VERBOSE = False
 
 
 def print_debug(text):
@@ -59,15 +60,25 @@ def print_debug(text):
         print(text)
 
 
+def print_verbose(text):
+    if __DEBUG_VERBOSE:
+        print(text)
+
+
+def global_set(name, val):
+    globals()[name] = val
+
+
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="Use test data", action="store_true")
-    parser.add_argument("--debug", help="Debug output", action="store_true")
+    parser.add_argument("-d", "--debug", help="Debug output", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Verbose Debug output", action="store_true")
     if args_func:
         args_func(parser)
     args = parser.parse_args()
-    global __DEBUG_PRINT
-    __DEBUG_PRINT = args.debug
+    global_set("__DEBUG_PRINT", args.debug or args.verbose)
+    global_set("__DEBUG_VERBOSE", args.verbose)
     return args
 
 
