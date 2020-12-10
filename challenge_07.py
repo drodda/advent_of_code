@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 
-import os
-import sys
 import traceback
-import ipdb as pdb
-import re
-import json
-import numpy as np
-import string
 
 from utils import *
 
@@ -22,12 +15,10 @@ def parse_input(filename):
         bag_list = []
         if bag_contains == "no other":
             bag_dict[bag_col] = []
-            pass
         else:
             for item in bag_contents:
                 n, col = item.split(" ", 1)
                 print_debug(f"  {n} = {col}")
-                # Construct forward
                 bag_list.append((int(n), col))
         bag_dict[bag_col] = bag_list
     return bag_dict
@@ -43,11 +34,14 @@ def bag_can_contain(bag_dict, bag_col, target="shiny gold"):
     return False
 
 
-def bag_contents(bag_dict, bag_col):
+def bag_contents_count(bag_dict, bag_col):
     result = 0
     for n, col in bag_dict[bag_col]:
-        result += n * bag_contents(bag_dict, col)
-    return result + 1
+        # Increment count for bag
+        result += n
+        # Increment cout for contents of bag
+        result += n * bag_contents_count(bag_dict, col)
+    return result
 
 
 def main():
@@ -67,8 +61,7 @@ def main():
     print("Part 2:")
     if args.test:
         bag_dict = parse_input(data_file_path("test", "b"))
-    print(bag_contents(bag_dict, "shiny gold") - 1)
-
+    print(bag_contents_count(bag_dict, "shiny gold"))
 
 
 if __name__ == "__main__":
