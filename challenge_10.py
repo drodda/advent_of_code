@@ -1,25 +1,9 @@
 #!/usr/bin/env python3
 
-import os
-import sys
 import traceback
-import ipdb as pdb
-import re
-import json
 import numpy as np
-import string
-import copy
 
 from utils import *
-
-
-def calculate_tribonacci(n, start=(0, 0, 1), trim=True):
-    result = copy.copy(list(start))
-    for i in range(n):
-        result.append(sum(result[-3:]))
-    if trim:
-        result = result[len(start):]
-    return result
 
 
 def group_by(x):
@@ -31,6 +15,18 @@ def group_by(x):
     return result
 
 
+def permutations(n):
+    """ Calculate the number of permutations for n bits which can have a gap of at most 2 off bits between on bits """
+    if n < 1:
+        return 1
+    # Calculate the number of combinations for n bits where
+    result = pow(2, n)
+    # Subtract each combination of 3 or more in a row
+    for x in range(0, n-2):
+        result -= pow(2, x)
+    return result
+
+
 def main():
     args = parse_args()
 
@@ -38,7 +34,9 @@ def main():
     if args.test:
         data_file = data_file_path("test", "a")
 
+    # Read data
     data_list = read_list_int(data_file, degen=True)
+    # Add start (0) and end (max+3)
     data_list.append(0)
     data_list.append(max(data_list) + 3)
 
@@ -61,17 +59,16 @@ def main():
 
     print("Part 2")
     # Group differences into sequence of (value, len)
-    data_groups = list(group_by(data_diff))
+    data_groups = group_by(data_diff)
     # Only values where value is 1 need to be considered
     data_groups = [(v, l) for v, l in data_groups if v == 1]
-    max_len = max([l for _, l in data_groups])
-    tribonacci = calculate_tribonacci(max_len)
 
+    # Calculate total number of permutations
     result = 1
     for v, l in data_groups:
         # Calculate permutations for each group
-        print_verbose(f"{v} * {l} = {tribonacci[l-1]}")
-        result *= tribonacci[l-1]
+        print_verbose(f"{v} * {l} = {permutations(l-1)}")
+        result *= permutations(l-1)
     print(result)
 
 

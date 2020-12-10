@@ -24,10 +24,16 @@ def read_lines(file_path, strip_empty=True):
             yield line
 
 
-def read_list_int(file_path, strip=True):
-    """ Read a file of integers, one per line """
+def read_list_int(file_path, strip=True, degen=False):
+    """ Read a file of integers, one per line
+        strip will remove empty lines
+        degen will return a list instead of a generator
+    """
     lines = read_lines(file_path, strip)
-    return map(int, lines)
+    result = map(int, lines)
+    if degen:
+        result = list(result)
+    return result
 
 
 def read_multilines(file_path, join=False, join_str=" "):
