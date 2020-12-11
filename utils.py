@@ -11,7 +11,18 @@ def rtrim(text, trim):
     return text
 
 
-def read_lines(file_path, strip_empty=True):
+def read_lines(file_path, strip_empty=True, to_list=False):
+    """ Read a file, yield a list of lines.
+        strip_empty will remove empty lines
+        to_list will return a list instead of a generator
+    """
+    line_gen = _read_lines(file_path, strip_empty)
+    if to_list:
+        return list(line_gen)
+    return line_gen
+
+
+def _read_lines(file_path, strip_empty=True):
     """ Read a file, yield a list of lines.
         Remove empty lines if strip_empty
     """
@@ -24,16 +35,13 @@ def read_lines(file_path, strip_empty=True):
             yield line
 
 
-def read_list_int(file_path, strip=True, degen=False):
+def read_list_int(file_path, strip=True, to_list=False):
     """ Read a file of integers, one per line
         strip will remove empty lines
-        degen will return a list instead of a generator
+        to_list will return a list instead of a generator
     """
-    lines = read_lines(file_path, strip)
-    result = map(int, lines)
-    if degen:
-        result = list(result)
-    return result
+    lines = read_lines(file_path, strip, to_list)
+    return map(int, lines)
 
 
 def read_multilines(file_path, join=False, join_str=" "):
@@ -61,12 +69,12 @@ __DEBUG_PRINT = False
 __DEBUG_VERBOSE = False
 
 
-def print_debug(text):
+def print_debug(text=""):
     if __DEBUG_PRINT:
         print(text)
 
 
-def print_verbose(text):
+def print_verbose(text=""):
     if __DEBUG_VERBOSE:
         print(text)
 

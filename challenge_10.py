@@ -35,7 +35,7 @@ def main():
         data_file = data_file_path("test", "a")
 
     # Read data
-    data_list = read_list_int(data_file, degen=True)
+    data_list = read_list_int(data_file, to_list=True)
     # Add start (0) and end (max+3)
     data_list.append(0)
     data_list.append(max(data_list) + 3)
