@@ -11,6 +11,13 @@ def rtrim(text, trim):
     return text
 
 
+def ltrim(text, trim):
+    l = len(trim)
+    if text.startswith(trim):
+        return text[l:]
+    return text
+
+
 def read_lines(file_path, strip_empty=True, to_list=False):
     """ Read a file, yield a list of lines.
         strip_empty will remove empty lines
