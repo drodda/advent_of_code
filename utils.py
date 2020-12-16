@@ -93,6 +93,7 @@ def global_set(name, val):
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="Use test data", action="store_true")
+    parser.add_argument("--var", help="File variant to use", default="")
     parser.add_argument("-d", "--debug", help="Debug output", action="store_true")
     parser.add_argument("-v", "--verbose", help="Verbose Debug output", action="store_true")
     if args_func:
