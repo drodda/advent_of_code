@@ -5,90 +5,123 @@ import itertools
 from utils import *
 
 
-N_CYCLES = 6
+N_STEPS = 6
 
 
 def parse_input(lines):
     result = []
-    # x_min =
     z = 0
+    w = 0
     for x, line in enumerate(lines):
         for y, c in enumerate(line):
             if c == "#":
-                result.append((x, y, z, 0))
+                result.append((x, y, z, w))
     return result
 
 
-def get_limit(data, axis):
-    col_min = min([row[axis] for row in data])
-    col_max = max([row[axis] for row in data])
-    return col_min, col_max
+def generate_all_neighbours(data, use_w_axis=False):
+    """ Calculate all neighbours for points in data
+        If use_w_axis is true then 4-dimensional neighbours are calculated, otherwise 3-dimensional
+    """
+    neighbours_origin = generate_point_neighbours(0, 0, 0, 0, False, use_w_axis)
+    neighbours_product = itertools.product(data, neighbours_origin)
+    neighbours_full = [(x+dx, y+dy, z+dz, w+dw) for (x, y, z, w), (dx, dy, dz, dw) in neighbours_product]
+    neighbours = sorted(list(set(neighbours_full)))
+    return neighbours
 
 
-def get_range(data, axis):
-    return sorted(list(set([row[axis] for row in data])))
-
-
-# def get_range_with_offset(data, axis, offset):
-#     values = get_range(data, axis)
-#     offsets = list(range(0-offset, offset+2))
-#     result = sorted(list(set((a+b) for a, b in itertools.product(values, offsets))))
-#     return result
-
-
-def generate_neighbours(x, y, z, w, remove_self=True):
-    neighbours = set(itertools.product(range(x-1, x+2), range(y-1, y+2), range(z-1, z+2), range(w-1, w+2)))
+def generate_point_neighbours(x, y, z, w, remove_self=True, use_w_axis=False):
+    """ Calculate the neighbours of point (x,y,z,w)
+        If remove_self then (x,y,z,w) is not in the output, otherwise it is
+        If use_w_axis is true then 4-dimensional neighbours are calculated, otherwise 3-dimensional
+    """
+    x_range = range(x - 1, x + 2)
+    y_range = range(y - 1, y + 2)
+    z_range = range(z - 1, z + 2)
+    w_range = range(w - 1, w + 2) if use_w_axis else [w]
+    neighbours = set(itertools.product(x_range, y_range, z_range, w_range))
     if remove_self:
         neighbours.remove((x, y, z, w))
     return neighbours
 
 
-def step_element(state, occupied_neighbours):
-    return (state and 2 <= occupied_neighbours <= 3) or (not state and occupied_neighbours == 3)
+def run_simulation(data, n_steps, use_w_axis=False, debug=False, verbose=False):
+    """ Run the simulation with starting state data for n_steps
+        args from argparse
+        use_w_axis is true if the simulation should be 4-dimensional, otherwise 3-dimensional
+    """
+    for i in range(n_steps):
+        data = step_simulation(data, use_w_axis)
+        debug_print_state(data, i, debug, verbose)
+    return len(data)
 
 
-def step_simulation(data):
-    x_min, x_max = get_limit(data, 0)
-    y_min, y_max = get_limit(data, 1)
-    z_min, z_max = get_limit(data, 2)
-    w_min, w_max = get_limit(data, 3)
-
-    x_range = range(x_min - 1, x_max + 2)
-    y_range = range(y_min - 1, y_max + 2)
-    z_range = range(z_min - 1, z_max + 2)
-    w_range = range(w_min - 1, w_max + 2)
-    # x_range = get_range_with_offset(data, 0, 1)
-    # y_range = get_range_with_offset(data, 1, 1)
-    # z_range = get_range_with_offset(data, 2, 1)
-    # w_range = get_range_with_offset(data, 3, 1)
-
+def step_simulation(data, use_w_axis=False):
+    """ For a current state data, run the simulation and return a new data """
+    # Find the neighbours to all points in data
+    data_neighbours = generate_all_neighbours(data, use_w_axis)
+    print_debug(f"{len(data)} points, {len(data_neighbours)} neighbours")
+    # Check which of these neighbours should be set in the next iteration
     result = []
-    for x in x_range:
-        for y in y_range:
-            for z in z_range:
-                for w in w_range:
-                    occupied_neighbours = sum([neighbour in data for neighbour in generate_neighbours(x, y, z, w)])
-                    if step_element((x, y, z, w) in data, occupied_neighbours):
-                        result.append((x, y, z, w))
+    for x, y, z, w in data_neighbours:
+        neighbours = generate_point_neighbours(x, y, z, w, True, use_w_axis)
+        occupied_neighbours = sum([neighbour in data for neighbour in neighbours])
+        if step_element((x, y, z, w) in data, occupied_neighbours):
+            result.append((x, y, z, w))
+
     return result
 
 
-def coord_to_char(data, x, y, z, w):
-    return "#" if (x, y, z, w) in data else "."
+def step_element(state, occupied_neighbours):
+    """ Check if a point currently in state (boolean) with occupied_neighbours currently occupied should be occupied """
+    return (state and 2 <= occupied_neighbours <= 3) or (not state and occupied_neighbours == 3)
 
 
-def print_data(data):
+###############################################################################
+# Utilities - print
+
+
+def debug_print_state(data, step, debug=False, verbose=False):
+    """ Print the current state """
+    if debug or verbose:
+        x_min, x_max = get_limit(data, 0)
+        y_min, y_max = get_limit(data, 1)
+        z_min, z_max = get_limit(data, 2)
+        w_min, w_max = get_limit(data, 3)
+        print("######################################")
+        print(f"Step {step + 1}: {x_max - x_min} * {y_max - y_min} * {z_max - z_min} * {w_max - w_min}")
+        if verbose:
+            debug_print_data(data)
+
+
+def debug_print_data(data):
+    """ Print a graphical representation of data """
     x_min, x_max = get_limit(data, 0)
     y_min, y_max = get_limit(data, 1)
     z_min, z_max = get_limit(data, 2)
     w_min, w_max = get_limit(data, 3)
     for w in range(w_min, w_max + 1):
         for z in range(z_min, z_max+1):
-            print(f"Z = {z}, W = {w}:")
+            print(f"Z = {z}, W = {w}, origin {x_min},{y_min}:")
             for x in range(x_min, x_max + 1):
                 row = [coord_to_char(data, x, y, z, w) for y in range(y_min, y_max+1)]
                 print("".join(row))
             print()
+
+
+def coord_to_char(data, x, y, z, w):
+    """ Get value at x,y,z,w from data, convert to '#' (occupied) or '.' (unoccupied) """
+    return "#" if (x, y, z, w) in data else "."
+
+
+def get_limit(data, axis):
+    """ Calculate the minimum and maximum value in a given axis """
+    col_min = min([row[axis] for row in data])
+    col_max = max([row[axis] for row in data])
+    return col_min, col_max
+
+
+###############################################################################
 
 
 def main():
@@ -96,24 +129,13 @@ def main():
     data_file = data_file_path_main(test=args.test)
     lines = read_lines(data_file)
     data = parse_input(lines)
-    if args.verbose:
-        print_data(data)
 
-    for i in range(N_CYCLES):
-        data = step_simulation(data)
-        if args.debug:
-            x_min, x_max = get_limit(data, 0)
-            y_min, y_max = get_limit(data, 1)
-            z_min, z_max = get_limit(data, 2)
-            w_min, w_max = get_limit(data, 3)
-            print("######################################")
-            print(f"Step {i+1}: {x_max-x_min} * {y_max-y_min} * {z_max-z_min} * {w_max-w_min}")
-            if args.verbose:
-                print_data(data)
-    print(len(data))
-
-    # print("Part 1")
-    # print("Part 2")
+    print("Part 1")
+    result = run_simulation(data, N_STEPS, False, args.debug, args.verbose)
+    print(result)
+    print("Part 2")
+    result = run_simulation(data, N_STEPS, True, args.debug, args.verbose)
+    print(result)
 
 
 if __name__ == "__main__":

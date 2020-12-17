@@ -99,7 +99,12 @@ def parse_args(args_func=None):
     if args_func:
         args_func(parser)
     args = parser.parse_args()
-    global_set("__DEBUG_PRINT", args.debug or args.verbose)
+
+    # Set debug if verbose is set
+    if args.verbose:
+        args.debug = True
+
+    global_set("__DEBUG_PRINT", args.debug)
     global_set("__DEBUG_VERBOSE", args.verbose)
     return args
 
