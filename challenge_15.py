@@ -9,53 +9,42 @@ LEN_PART1 = 2020
 LEN_PART2 = 30000000
 
 
-INPUT = [11, 0, 1, 10, 5, 19]
-INPUT_TEST = [
-    [0, 3, 6],
-    [1, 3, 2],
-    [2, 1, 3],
-    [1, 2, 3],
-    [2, 3, 1],
-    [3, 2, 1],
-    [3, 1, 2],
-]
-
-
 def elf_game(initial, max_len):
     # Strip head from initial data, as this will be the first element operated on
-    *_initial, elem = initial
-    # Construct a dictionary of when each element in initla data was seen
+    *_initial, last = initial
+    # Construct a dictionary of when each element in initial data was seen
     seen = {v: i for i, v in enumerate(_initial)}
-    for i in range(len(initial)-1, max_len-1):
-        # Look up when elem was last seen, or default to now
-        last_seen = seen.get(elem, i)
-        # Store elem as seen now
-        seen[elem] = i
-        # Next element is time since last element was seen, or default to 0
-        elem = i - last_seen
-    return elem
+    for i in range(len(_initial), max_len-1):
+        # Calculate next element: Difference between when last was last seen and now, default to 0
+        elem = i - seen.get(last, i)
+        # Store last element as seen now
+        seen[last] = i
+        # Next element is now last element
+        last = elem
+    return last
 
 
-def run_all_elf_games(max_len):
-    def run_elf_game(_data, label):
+def run_all_elf_games(data, max_len):
+    def run_elf_game(_data):
         result = elf_game(_data, max_len)
-        print(f"{label} {_data} = {result}")
+        print(f"{_data} = {result}")
 
     # Run all test input
-    for data in INPUT_TEST:
-        run_elf_game(data, "Test")
-    # Run real input
-    run_elf_game(INPUT, "Real")
+    for row in data:
+        run_elf_game(row)
 
 
 def main():
-    parse_args()
+    args = parse_args()
+    data_file = data_file_path_main(test=args.test)
+    lines = read_lines(data_file)
+    data = [list(map(int, line.split(","))) for line in lines]
 
     print("Part 1")
-    run_all_elf_games(LEN_PART1)
+    run_all_elf_games(data, LEN_PART1)
 
     print("Part 2")
-    run_all_elf_games(LEN_PART2)
+    run_all_elf_games(data, LEN_PART2)
 
 
 if __name__ == "__main__":
