@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import traceback
 import itertools
+import collections
 
 from utils import *
 
@@ -58,17 +59,18 @@ def run_simulation(data, n_steps, use_w_axis=False, debug=False, verbose=False):
 
 def step_simulation(data, use_w_axis=False):
     """ For a current state data, run the simulation and return a new data """
-    # Find the neighbours to all points in data
-    data_neighbours = generate_all_neighbours(data, use_w_axis)
-    print_debug(f"{len(data)} points, {len(data_neighbours)} neighbours")
-    # Check which of these neighbours should be set in the next iteration
-    result = []
-    for x, y, z, w in data_neighbours:
-        neighbours = generate_point_neighbours(x, y, z, w, True, use_w_axis)
-        occupied_neighbours = sum([neighbour in data for neighbour in neighbours])
-        if step_element((x, y, z, w) in data, occupied_neighbours):
-            result.append((x, y, z, w))
 
+    # Count active neighbours for every point that is a neighbour to a point in data
+    neighbour_count = collections.defaultdict(int)
+    for x, y, z, w in data:
+        for point in generate_point_neighbours(x, y, z, w, True, use_w_axis):
+            neighbour_count[point] += 1
+
+    # For each point that has active neighbours, check if it should be active in the next step
+    result = []
+    for point, count in neighbour_count.items():
+        if step_element(point in data, count):
+            result.append(point)
     return result
 
 
