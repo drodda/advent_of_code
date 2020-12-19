@@ -1,13 +1,48 @@
 #!/usr/bin/env python3
 import traceback
+import operator
+import collections
 
 from utils import *
 
 
-def split_expression(expr):
-    """ Extract symbols between parenthesis and convert into a sub-list of symbols """
+# Mapping between operation symbol and operation
+OPERATIONS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.floordiv,
+    "^": operator.pow,
+}
+
+
+# Operation precedence: higher precedence operations happen first
+PREC_DEFAULT = {
+    "+": 0,
+    "-": 0,
+    "*": 1,
+    "/": 1,
+    "^": 2,
+}
+PREC_NONE = collections.defaultdict(int)
+PREC_PLUS = collections.defaultdict(int, {"+": 1})
+
+
+def parse_expression_reverse_polish(expr_str, prec=None):
+    """ Convert an infix expression string expr_str to reverse polish. Apply operator ordering from prec """
+    # Split sting into a list of tokens
+    expr = split_tokens(expr_str)
+    # Extract symbols between inner-most parenthesis and convert into a sub-list of symbols
     while "(" in expr:
         expr = group_parenthesis(expr)
+    rp_expr = to_reverse_polish(expr, prec)
+    return rp_expr
+
+
+def split_tokens(expr_str):
+    """ Split an expression into tokens """
+    expr = expr_str.replace("(", " ( ").replace(")", " ) ").replace("+", " + ").replace("*", " * ").split()
+    expr = [int(v) if v.isnumeric() else v for v in expr]
     return expr
 
 
@@ -21,68 +56,64 @@ def group_parenthesis(expr):
     expr_between = expr[(paren_start + 1):paren_end]
     expr_before = expr[:paren_start]
     expr_after = expr[paren_end + 1:]
-    # Make expr_between its own expression. Recursively group expr_before and expr_after
+    # Make expr_between its own expression
     return expr_before + [expr_between] + expr_after
 
 
-def split_tokens(expr_str):
-    """ Split an expression into tokens """
-    return expr_str.replace("(", " ( ").replace(")", " ) ").replace("+", " + ").replace("*", " * ").split()
+def to_reverse_polish(expr, prec=None):
+    """ Convert an expression to reverse polish, using precedence rules in prec """
+    if prec is None:
+        prec = PREC_DEFAULT
 
+    operation_stack = []
+    result = []
+    for token in expr:
+        if isinstance(token, str):
+            # Operation:
+            if token not in OPERATIONS:
+                raise RuntimeError(f"Invalid token: {token}")
+            # Move operations that should already have been performed to result
+            while operation_stack:
+                if prec[operation_stack[-1]] < prec[token]:
+                    break
+                result.append(operation_stack.pop())
+            # Add operation to pending operations
+            operation_stack.append(token)
+        else:
+            # Literal, or sub-expression: add straight to result
+            if isinstance(token, list):
+                token = to_reverse_polish(token, prec)
+            result.append(token)
 
-def evaluate_expression(expr_str, priority_operation=None):
-    """ Evaluate an expression from a string
-        If priority_operation is supplied, evaluate that operation first
-    """
-    expr_tokens = split_tokens(expr_str)
-    expr = split_expression(expr_tokens)
-    result = _evaluate_expression(expr, priority_operation)
+    while operation_stack:
+        result.append(operation_stack.pop())
+
     return result
 
 
-def _evaluate_expression(expr, priority_operation=None):
-    """ Recursively evaluate elements from an expression """
-    if isinstance(expr, int):
-        return expr
-    if isinstance(expr, str):
-        # Literal
-        return int(expr)
-    if len(expr) == 1:
-        # Literal OR sub-expression: evaluate
-        return _evaluate_expression(expr[0], priority_operation)
-    # print(f"EVAL: {_expr} for {priority_operation}")
-
-    if priority_operation is not None:
-        while len(expr) > 3 and priority_operation in expr:
-            index = expr.index(priority_operation)
-            before = expr[:index - 1]
-            first = expr[index - 1]
-            second = expr[index + 1]
-            after = expr[index + 2:]
-            priority_result = _evaluate(first, second, priority_operation, priority_operation)
-            expr = before + [priority_result] + after
-
-    # No priorities left: evaluate left to right
-    while len(expr) >= 3:
-        first, operation, second, *rest = expr
-        partial_result = _evaluate(first, second, operation, priority_operation)
-        expr = [partial_result] + rest
-    # expr is now a single element - return it
-    return expr[0]
+def reverse_polish_calculator(rp_expr):
+    """ Evaluate reverse polish expression rp_expr """
+    stack = []
+    # print(f"reverse_polish_calculator({rp_expr})")
+    for token in rp_expr:
+        if isinstance(token, int):
+            stack.append(token)
+        elif isinstance(token, list):
+            # A sub-expression: evaluate it
+            stack.append(reverse_polish_calculator(token))
+        elif token in OPERATIONS:
+            x = stack.pop()
+            y = stack.pop()
+            result = do_operate(x, y, token)
+            stack.append(result)
+    if len(stack) != 1:
+        raise RuntimeError(f"Bad expression: {rp_expr} results in {stack}")
+    return stack[0]
 
 
-def _evaluate(first, second, operation, priority_operation=None):
-    """ Evaluate a single operation between first and second params """
-    # Evaluate first and second params
-    first = _evaluate_expression(first, priority_operation)
-    second = _evaluate_expression(second, priority_operation)
-
-    # Perform operation on (evaluated) first and second
-    if operation == "+":
-        return first + second
-    elif operation == "*":
-        return first * second
-    raise ValueError(f"Unknown operation: {operation}")
+def do_operate(x, y, operation):
+    """ Apply operation to x and y """
+    return OPERATIONS[operation](x, y)
 
 
 ###############################################################################
@@ -97,7 +128,8 @@ def main():
     print("Part 1")
     part1_result = 0
     for line in lines:
-        result = evaluate_expression(line)
+        rp_expr = parse_expression_reverse_polish(line, PREC_NONE)
+        result = reverse_polish_calculator(rp_expr)
         print_debug(f"{line} = {result}")
         part1_result += result
     print(part1_result)
@@ -106,7 +138,8 @@ def main():
     print("Part 2")
     part2_result = 0
     for line in lines:
-        result = evaluate_expression(line, "+")
+        rp_expr = parse_expression_reverse_polish(line, PREC_PLUS)
+        result = reverse_polish_calculator(rp_expr)
         print_debug(f"{line} = {result}")
         part2_result += result
     print(part2_result)
