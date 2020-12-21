@@ -18,6 +18,10 @@ def ltrim(text, trim):
     return text
 
 
+def str_reversed(text):
+    return text[::-1]
+
+
 def read_lines(file_path, strip_empty=True, to_list=False):
     """ Read a file, yield a list of lines.
         strip_empty will remove empty lines
