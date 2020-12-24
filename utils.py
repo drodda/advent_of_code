@@ -3,6 +3,16 @@ import os
 import sys
 
 
+try:
+    import ipdb as pdb
+except ImportError:
+    import pdb
+
+
+trace = pdb.set_trace
+
+
+
 def rtrim(text, trim):
     """ removesuffix """
     l = len(trim)
