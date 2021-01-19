@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import os
 import sys
 
@@ -134,3 +135,18 @@ def data_file_path(suffix, var="", ext="txt"):
 def data_file_path_main(test):
     suffix = "test" if test else "full"
     return data_file_path(suffix)
+
+
+def grouper(iterable, n=2, fillvalue=None, to_list=False):
+    """ Group iterable into n-length chunks
+        grouper('abcdefg', 3) --> ('a','b','c'), ('d','e','f'), ('g',None,None)
+    """
+    # Replicate iterable n times
+    iterables = itertools.tee(iterable, n)
+    # Slice iterables
+    iterables_sliced = [itertools.islice(iterables[i], i, None, n) for i in range(n)]
+    # Zip
+    result = itertools.zip_longest(*iterables_sliced, fillvalue=fillvalue)
+    if to_list:
+        result = list(result)
+    return result
