@@ -15,7 +15,7 @@ class VM:
             for k, v in patch_mem_values.items():
                 self.mem[k] = v
         self.output = []
-        self.input = input_values or []
+        self.input = copy.copy(input_values or [])
 
     def decode_instruction(self):
         """ Decode instruction at self.ip and return opcode and modes """
@@ -74,7 +74,7 @@ class VM:
         elif opcode == 3:
             # Input -> p1
             next_ip += 1
-            self.put(mode_1, self.operand(1), self.input.pop())
+            self.put(mode_1, self.operand(1), self.input.pop(0))
         elif opcode == 4:
             # p1 -> Output
             next_ip += 1

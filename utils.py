@@ -22,12 +22,18 @@ log.verbose = lambda msg, *args, **kwargs: log.log(VERBOSE, msg, *args, **kwargs
 ALWAYS = logging.CRITICAL
 logging.addLevelName(ALWAYS, "ALWAYS")
 log.always = log.critical
+NEVER = logging.NOTSET - 1
+logging.addLevelName(NEVER, "NEVER")
+log.never = lambda msg, *args, **kwargs: log.log(NEVER, msg, *args, **kwargs)
 
 # Export log functions
 log_verbose = log.verbose
 log_debug = log.debug
 log_info = log.info
 log_always = log.always
+log_warning = log.warning
+log_error = log.error
+log_never = log.never
 
 
 def rtrim(text, trim):
