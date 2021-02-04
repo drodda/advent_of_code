@@ -34,18 +34,18 @@ def main():
     args = parse_args()
     lines = list(read_lines(data_file_path_main(test=args.test)))
 
-    print("Part 1:")
-    print(count_trees_in_path(lines, 0, 3))
-    print()
+    log_always("Part 1:")
+    log_always(count_trees_in_path(lines, 0, 3))
+    log_always()
 
-    print("Part 2:")
+    log_always("Part 2:")
     result = 1
     for dx, dy in PART2_STEPS:
-        # print(f"{dx}, {dy}")
+        # log_always(f"{dx}, {dy}")
         trees = count_trees_in_path(lines, 0, dx, dy)
         result = result * trees
-        # print()
-    print(result)
+        # log_always()
+    log_always(result)
 
 
 if __name__ == "__main__":
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

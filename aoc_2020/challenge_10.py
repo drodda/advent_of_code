@@ -46,18 +46,18 @@ def main():
 
     # Calculate the difference between consecutive numbers
     data_diff = np.diff(data_array)
-    print_debug(data_array)
-    print_debug(data_diff)
+    log_debug(data_array)
+    log_debug(data_diff)
 
     # Calculate the number of 1's and 3's
     count_1 = sum(data_diff == 1)
     count_3 = sum(data_diff == 3)
     part_1_result = count_1 * count_3
 
-    print("Part 1")
-    print(f"{count_1}, {count_3} = {part_1_result}")
+    log_always("Part 1")
+    log_always(f"{count_1}, {count_3} = {part_1_result}")
 
-    print("Part 2")
+    log_always("Part 2")
     # Group differences into sequence of (value, len)
     data_groups = group_by(data_diff)
     # Only values where value is 1 need to be considered
@@ -67,9 +67,9 @@ def main():
     result = 1
     for v, l in data_groups:
         # Calculate permutations for each group
-        print_verbose(f"{v} * {l} = {permutations(l-1)}")
+        log_verbose(f"{v} * {l} = {permutations(l-1)}")
         result *= permutations(l-1)
-    print(result)
+    log_always(result)
 
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

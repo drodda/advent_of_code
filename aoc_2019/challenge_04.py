@@ -37,7 +37,7 @@ def find_valid_passwords(val_min, val_max, *criteria):
     for val in range(val_min, val_max + 1):
         val_digits = to_digits(val, 6)
         if all([_criteria(val_digits) for _criteria in criteria]):
-            print_verbose(f"Valid password: {val}")
+            log_verbose(f"Valid password: {val}")
             valid.append(valid)
     return valid
 
@@ -50,11 +50,11 @@ def main():
     data_file = data_file_path_main(test=args.test)
     val_min, val_max = read_list_int(data_file)
     valid = find_valid_passwords(val_min, val_max, check_increasing, check_repeat)
-    print("Part 1")
-    print(len(valid))
+    log_always("Part 1")
+    log_always(len(valid))
     valid = find_valid_passwords(val_min, val_max, check_increasing, check_repeat_exactly_two)
-    print("Part 2")
-    print(len(valid))
+    log_always("Part 2")
+    log_always(len(valid))
 
 
 if __name__ == "__main__":
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

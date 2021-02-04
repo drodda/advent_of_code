@@ -13,9 +13,9 @@ def calculate_fuel_masses(mass):
     fuel_basic = calculate_fuel_mass(mass)
     fuel_recursive = 0
     fuel_mass = fuel_basic
-    print_verbose(f"Mass {mass}:")
+    log_verbose(f"Mass {mass}:")
     while fuel_mass > 0:
-        print_verbose(f"  {fuel_mass}")
+        log_verbose(f"  {fuel_mass}")
         fuel_recursive += fuel_mass
         fuel_mass = calculate_fuel_mass(fuel_mass)
     return fuel_basic, fuel_recursive
@@ -35,12 +35,12 @@ def main():
         fuel_basic,  fuel_recursive = calculate_fuel_masses(mass)
         result_basic += fuel_basic
         result_recursive += fuel_recursive
-        print_debug(f"Mass: {mass} Fuel Basic {fuel_basic} Fuel Recursive {fuel_recursive}")
+        log_debug(f"Mass: {mass} Fuel Basic {fuel_basic} Fuel Recursive {fuel_recursive}")
 
-    print("Part 1")
-    print(result_basic)
-    print("Part 2")
-    print(result_recursive)
+    log_always("Part 1")
+    log_always(result_basic)
+    log_always("Part 2")
+    log_always(result_recursive)
 
 
 if __name__ == "__main__":
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

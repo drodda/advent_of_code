@@ -81,7 +81,7 @@ class VM:
             p1 = self.operand(1)
             v = self.load(mode_1, p1)
             self.output.append(v)
-            print_debug(f"OUTPUT: ip {self.ip} addr {p1} val {v}")
+            log_debug(f"OUTPUT: ip {self.ip} addr {p1} val {v}")
         elif opcode in self.OPERATORS_EVAL_JUMP:
             # Load+Eval?Jump operations: Evaluate condition on p1 and (conditionally) jump to p2
             next_ip += 2
@@ -96,10 +96,10 @@ class VM:
 
     def run(self):
         try:
-            print_verbose(f"{self.ip}: {self.mem}")
+            log_verbose(f"{self.ip}: {self.mem}")
             while True:
                 self.step()
-                print_verbose(f"{self.ip}: {self.mem}")
+                log_verbose(f"{self.ip}: {self.mem}")
         except StopIteration:
             pass
         return self.mem[0]
@@ -130,15 +130,15 @@ def main():
     data = open(data_file).read()
     data = list(map(int, data.split(",")))
 
-    print("Part 1")
+    log_always("Part 1")
     vm = VM(data, input_values=[1])
     vm.run()
-    print(vm.output)
+    log_always(vm.output)
 
-    print("Part 2")
+    log_always("Part 2")
     vm = VM(data, input_values=[5])
     vm.run()
-    print(vm.output)
+    log_always(vm.output)
 
 
 if __name__ == "__main__":
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

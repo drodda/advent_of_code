@@ -87,20 +87,20 @@ def main():
     data = read_lines(data_file_path_main(test=args.test))
     nodes, node_children, nodes_parent, node_map = parse_input(data)
 
-    print_verbose(json.dumps(node_map, indent=2))
+    log_verbose(json.dumps(node_map, indent=2))
 
-    print("Part 1")
-    print(calculate_checksum(node_map))
+    log_always("Part 1")
+    log_always(calculate_checksum(node_map))
 
     if args.test:
         data = read_lines(data_file_path("test", "b"))
         nodes, node_children, nodes_parent, node_map = parse_input(data)
 
-    print("Part 2")
+    log_always("Part 2")
     path_you_san = path_between("YOU", "SAN", nodes_parent)
-    print_verbose(path_you_san)
+    log_verbose(path_you_san)
     # Number of transfers is path length - 1 as YOU is already a child of path[0]
-    print(len(path_you_san) - 1)
+    log_always(len(path_you_san) - 1)
 
 
 if __name__ == "__main__":
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

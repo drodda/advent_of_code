@@ -94,7 +94,7 @@ def to_reverse_polish(expr, prec=None):
 def reverse_polish_calculator(rp_expr):
     """ Evaluate reverse polish expression rp_expr """
     stack = []
-    # print(f"reverse_polish_calculator({rp_expr})")
+    # log_always(f"reverse_polish_calculator({rp_expr})")
     for token in rp_expr:
         if isinstance(token, int):
             stack.append(token)
@@ -125,24 +125,24 @@ def main():
     lines = read_lines(data_file, to_list=True)
 
     # import ipdb; ipdb.set_trace()
-    print("Part 1")
+    log_always("Part 1")
     part1_result = 0
     for line in lines:
         rp_expr = parse_expression_reverse_polish(line, PREC_NONE)
         result = reverse_polish_calculator(rp_expr)
-        print_debug(f"{line} = {result}")
+        log_debug(f"{line} = {result}")
         part1_result += result
-    print(part1_result)
+    log_always(part1_result)
 
-    print()
-    print("Part 2")
+    log_always()
+    log_always("Part 2")
     part2_result = 0
     for line in lines:
         rp_expr = parse_expression_reverse_polish(line, PREC_PLUS)
         result = reverse_polish_calculator(rp_expr)
-        print_debug(f"{line} = {result}")
+        log_debug(f"{line} = {result}")
         part2_result += result
-    print(part2_result)
+    log_always(part2_result)
 
 
 if __name__ == "__main__":
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

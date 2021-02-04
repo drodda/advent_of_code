@@ -1,5 +1,6 @@
 import argparse
 import itertools
+import logging
 import os
 import sys
 
@@ -13,9 +14,24 @@ except ImportError:
 trace = pdb.set_trace
 
 
+# Get logger that will be used by all clients of this module, and add extra log levels and methods
+log = logging.getLogger(sys.argv[0])
+VERBOSE = logging.DEBUG - 1
+logging.addLevelName(VERBOSE, "VERBOSE")
+log.verbose = lambda msg, *args, **kwargs: log.log(VERBOSE, msg, *args, **kwargs)
+ALWAYS = logging.CRITICAL
+logging.addLevelName(ALWAYS, "ALWAYS")
+log.always = log.critical
+
+# Export log functions
+log_verbose = log.verbose
+log_debug = log.debug
+log_info = log.info
+log_always = log.always
+
 
 def rtrim(text, trim):
-    """ removesuffix """
+    """ remove suffix """
     l = len(trim)
     if text.endswith(trim):
         return text[:-l]
@@ -87,40 +103,18 @@ def read_multilines(file_path, join=False, join_str=" "):
         yield item
 
 
-__DEBUG_PRINT = False
-__DEBUG_VERBOSE = False
-
-
-def print_debug(text=""):
-    if __DEBUG_PRINT:
-        print(text)
-
-
-def print_verbose(text=""):
-    if __DEBUG_VERBOSE:
-        print(text)
-
-
-def global_set(name, val):
-    globals()[name] = val
-
-
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="Use test data", action="store_true")
     parser.add_argument("--var", help="File variant to use", default="")
-    parser.add_argument("-d", "--debug", help="Debug output", action="store_true")
-    parser.add_argument("-v", "--verbose", help="Verbose Debug output", action="store_true")
+    parser.add_argument('-v', '--verbose', action='count', default=0)
     if args_func:
         args_func(parser)
     args = parser.parse_args()
 
-    # Set debug if verbose is set
-    if args.verbose:
-        args.debug = True
+    log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
+    logging.basicConfig(level=log_level, format='%(message)s')
 
-    global_set("__DEBUG_PRINT", args.debug)
-    global_set("__DEBUG_VERBOSE", args.verbose)
     return args
 
 

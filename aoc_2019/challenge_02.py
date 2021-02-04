@@ -30,7 +30,7 @@ class VM:
         try:
             while True:
                 self.step()
-                print_verbose(f"{self.ip}: {self.mem}")
+                log_verbose(f"{self.ip}: {self.mem}")
         except StopIteration:
             pass
         return self.mem[0]
@@ -44,7 +44,7 @@ class VM:
         result = operation(a, b)
         self.mem[addr_c] = result
         self.ip += 4
-        print_verbose(f"{operation.__name__} {addr_a} ({a}) {addr_b} ({b}) => {addr_c} ({result})")
+        log_verbose(f"{operation.__name__} {addr_a} ({a}) {addr_b} ({b}) => {addr_c} ({result})")
 
 
 class NoSolution(Exception):
@@ -75,19 +75,19 @@ def main():
     # Patch program
     patch_mem_values = {} if args.test else {1: 12, 2: 2}
 
-    print("Part 1")
+    log_always("Part 1")
     vm = VM(data, patch_mem_values)
     result = vm.run()
-    print(result)
+    log_always(result)
 
     if not args.test:
-        print("Part 2")
+        log_always("Part 2")
         try:
             x, y = find_vm_solution(data, 19690720)
             result = 100 * x + y
-            print(f"{x}, {y} = {result}")
+            log_always(f"{x}, {y} = {result}")
         except NoSolution as e:
-            print(e)
+            log_always(e)
 
 
 
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)
