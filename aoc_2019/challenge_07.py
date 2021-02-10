@@ -1,30 +1,38 @@
 #!/usr/bin/env python3
 import traceback
+import queue
 
 from utils import *
 
-import challenge_05
-from challenge_05 import VM
-# Disable verbose logging from challenge_05
-challenge_05.log_verbose = log_never
-challenge_05.log_debug = log_never
+import intcode_vm
+from intcode_vm import *
+
+# Disable verbose logging from intcode_vm
+intcode_vm.log_verbose = log_never
+intcode_vm.log_debug = log_never
 
 
 PHASES_LEN = 5
 
 
 def run_simulation(data, phases):
-    power = 0
+    vms = []
+    queues = [queue.Queue() for i in range(len(phases) + 1)]
     for i, phase in enumerate(phases):
-        input_values = [phase, power]
-        vm = VM(data, input_values=input_values)
-        vm.run()
-        if len(vm.output) != 1:
-            log_error(f"Warning: No output from step {i} from {phases}")
-            return None
-        power = vm.output[0]
-        log_debug(f"Step {i} input {input_values} output {power}")
-    return power
+        queues[i].put(phase)
+    # Load initial power
+    queues[0].put(0)
+    for i, phase in enumerate(phases):
+        vm = VMThread(data, input_queue=queues[i], output_queue=queues[i+1], tid=i)
+        vms.append(vm)
+    for vm in vms:
+        vm.start()
+    for vm in vms:
+        vm.join()
+    if queues[-1].empty():
+        log_error(f"Warning: No output from from {phases}")
+        return None
+    return queues[-1].get()
 
 
 def data_str(data):
@@ -41,11 +49,6 @@ def main():
         data = list(map(int, line.split(",")))
         log_always(f"{i}: {data_str(data)}")
 
-        # phases = [4, 3, 2, 1, 0]
-        # result = run_simulation(data, phases)
-        # log_always(result)
-        # return
-
         phase_permutations = itertools.permutations(range(PHASES_LEN))
         result_max = None
         result_phases = None
@@ -55,7 +58,7 @@ def main():
             if result_max is None or result > result_max:
                 result_max = result
                 result_phases = phases
-        log_always(f"{result_max} ({result_phases})")
+        log_always(f"{result_max} from phases {result_phases}")
 
 
 if __name__ == "__main__":

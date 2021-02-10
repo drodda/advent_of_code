@@ -119,7 +119,11 @@ def parse_args(args_func=None):
     args = parser.parse_args()
 
     log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
-    logging.basicConfig(level=log_level, format='%(message)s')
+    logging.basicConfig(
+        level=log_level,
+        handlers=[logging.StreamHandler(sys.stdout)],
+        format='%(message)s'
+    )
 
     return args
 
