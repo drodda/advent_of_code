@@ -68,21 +68,21 @@ def main():
     args = parse_args()
     data_file = data_file_path_main(test=args.test)
     lines = read_lines(data_file)
-    print("Part 1")
+    log_always("Part 1")
 
     tiles = collections.defaultdict(bool)
     for line in lines:
         x, y = walk_path(split_line(line))
         new_state = not tiles[(x, y)]
         tiles[(x, y)] = new_state
-        print_debug(f"Tile {x},{y} flipped to {new_state}")
-    print(sum(tiles.values()))
+        log_debug(f"Tile {x},{y} flipped to {new_state}")
+    log_always(sum(tiles.values()))
 
-    print("Part 2")
+    log_always("Part 2")
     for i in range(N_STEPS):
         tiles = simulation_step(tiles)
-        print_debug(f"Day {i+1}: {sum(tiles.values())}")
-    print(f"{sum(tiles.values())}")
+        log_debug(f"Day {i+1}: {sum(tiles.values())}")
+    log_always(f"{sum(tiles.values())}")
 
 
 if __name__ == "__main__":
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

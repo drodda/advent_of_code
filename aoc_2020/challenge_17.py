@@ -90,8 +90,8 @@ def debug_print_state(data, step, debug=False, verbose=False):
         y_min, y_max = get_limit(data, 1)
         z_min, z_max = get_limit(data, 2)
         w_min, w_max = get_limit(data, 3)
-        print("######################################")
-        print(f"Step {step + 1}: {x_max - x_min} * {y_max - y_min} * {z_max - z_min} * {w_max - w_min}")
+        log_always("######################################")
+        log_always(f"Step {step + 1}: {x_max - x_min} * {y_max - y_min} * {z_max - z_min} * {w_max - w_min}")
         if verbose:
             debug_print_data(data)
 
@@ -104,11 +104,11 @@ def debug_print_data(data):
     w_min, w_max = get_limit(data, 3)
     for w in range(w_min, w_max + 1):
         for z in range(z_min, z_max+1):
-            print(f"Z = {z}, W = {w}, origin {x_min},{y_min}:")
+            log_always(f"Z = {z}, W = {w}, origin {x_min},{y_min}:")
             for x in range(x_min, x_max + 1):
                 row = [coord_to_char(data, x, y, z, w) for y in range(y_min, y_max+1)]
-                print("".join(row))
-            print()
+                log_always("".join(row))
+            log_always()
 
 
 def coord_to_char(data, x, y, z, w):
@@ -132,12 +132,12 @@ def main():
     lines = read_lines(data_file)
     data = parse_input(lines)
 
-    print("Part 1")
+    log_always("Part 1")
     result = run_simulation(data, N_STEPS, False, args.debug, args.verbose)
-    print(result)
-    print("Part 2")
+    log_always(result)
+    log_always("Part 2")
     result = run_simulation(data, N_STEPS, True, args.debug, args.verbose)
-    print(result)
+    log_always(result)
 
 
 if __name__ == "__main__":
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

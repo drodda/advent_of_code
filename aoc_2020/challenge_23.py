@@ -75,20 +75,20 @@ def main():
     input_str = INPUT_TEST if args.test else INPUT_FULL
     data = [int(c) for c in input_str]
 
-    print("Part 1")
+    log_always("Part 1")
     cups = play(data, 0, STEPS_PART1)
     result = ''
     cup = cups[1]
     while cup != 1:
         result += str(cup)
         cup = cups[cup]
-    print(f"{result}")
+    log_always(f"{result}")
 
-    print("Part 2")
+    log_always("Part 2")
     cups = play(data, NCUPS_PART2, STEPS_PART2)
     cup1 = cups[1]
     cup2 = cups[cup1]
-    print(f"{cup1 * cup2}")
+    log_always(f"{cup1 * cup2}")
 
 
 if __name__ == "__main__":
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

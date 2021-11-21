@@ -34,8 +34,8 @@ def main():
     args = parse_args()
     data = load_data(test=args.test)
 
-    # print(data)
-    print("Part 1:")
+    # log_always(data)
+    log_always("Part 1:")
     valid = 0
     for line in data:
         n_min, n_max, ch, pw = line
@@ -43,18 +43,18 @@ def main():
         if n_min <= c <= n_max:
             valid += 1
         else:
-            print_debug(f"PW does not match: {n_min}-{n_max} = {c} {ch}: {pw}")
-    print(f"{valid} valid passwords")
+            log_debug(f"PW does not match: {n_min}-{n_max} = {c} {ch}: {pw}")
+    log_always(f"{valid} valid passwords")
 
-    print("Part 2:")
+    log_always("Part 2:")
     valid = 0
     for line in data:
         x, y, ch, pw = line
         if xor((pw[x-1] == ch), (pw[y-1] == ch)):
             valid += 1
         else:
-            print_debug(f"PW does not match: {x}-{y} {ch}: {pw}")
-    print(f"{valid} valid passwords")
+            log_debug(f"PW does not match: {x}-{y} {ch}: {pw}")
+    log_always(f"{valid} valid passwords")
 
 
 if __name__ == "__main__":
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

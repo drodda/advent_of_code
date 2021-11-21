@@ -154,7 +154,7 @@ def main():
         all_edges.extend(tile.edges)
         all_edges.extend(tile.edges_reversed)
 
-    print("Part 1")
+    log_always("Part 1")
     # Corners are tiles that have only 2 edges that match other tiles
     corners = []
     part1_result = 1
@@ -164,10 +164,10 @@ def main():
             if all_edges.count(edge) == 2:
                 matched_edges += 1
         if matched_edges == 2:
-            print_debug(f"Corner: {tile}")
+            log_debug(f"Corner: {tile}")
             corners.append(tile)
             part1_result *= tile.num
-    print(part1_result)
+    log_always(part1_result)
 
     # Arrange tiles in order. Start with one of the corners
     corner = corners[0]
@@ -227,11 +227,11 @@ def main():
                 for j in range(grid_y - target_y):
                     grid_sub = grid[i:i+target_x, j:j+target_y]
                     if np.sum(np.multiply(grid_sub, target_shape)) == target_shape_count:
-                        print_debug(f"Target found! {i} {j} {rotation}")
+                        log_debug(f"Target found! {i} {j} {rotation}")
                         monsters_found +=1
-    print("Part 2")
+    log_always("Part 2")
     part2_result = np.sum(grid) - monsters_found * np.sum(target_shape_orig)
-    print(part2_result)
+    log_always(part2_result)
 
 
 if __name__ == "__main__":
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

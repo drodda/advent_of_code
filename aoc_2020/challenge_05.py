@@ -42,7 +42,7 @@ def parse_seat(text):
 
     seat_id = calculate_seat_id(row, col)
 
-    print_debug(f"{text} = {row},{col} = {seat_id}")
+    log_debug(f"{text} = {row},{col} = {seat_id}")
     return row, col, seat_id
 
 
@@ -56,20 +56,20 @@ def main():
         try:
             row, col, seat_id = parse_seat(line)
         except InvalidSeat as e:
-            print_debug(str(e))
+            log_debug(str(e))
         else:
             max_seat_id = max(max_seat_id, seat_id)
             seat_array[seat_id] = True
 
-    print("Part 1:")
-    print(max_seat_id)
+    log_always("Part 1:")
+    log_always(max_seat_id)
 
-    print("Part 2:")
+    log_always("Part 2:")
 
     missing_seats = np.where(seat_array==False)[0]
     for missing_seat in missing_seats:
         if (missing_seat + 1) not in missing_seats and (missing_seat - 1) not in missing_seats:
-            print(f"Missing seat: {missing_seat}")
+            log_always(f"Missing seat: {missing_seat}")
 
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

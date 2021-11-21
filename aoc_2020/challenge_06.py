@@ -63,12 +63,12 @@ def main():
         any_count += entry_any_count
         entry_all_count = sum(entry_sum >= n)
         all_count += entry_all_count
-        print_debug(f"{i}: {entry_any_count}, {entry_all_count}")
+        log_debug(f"{i}: {entry_any_count}, {entry_all_count}")
 
-    print("Part 1:")
-    print(any_count)
-    print("Part 2:")
-    print(all_count)
+    log_always("Part 1:")
+    log_always(any_count)
+    log_always("Part 2:")
+    log_always(all_count)
 
 
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("Killed")
+        log_always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -1,4 +1,6 @@
 import argparse
+import itertools
+import logging
 import os
 import sys
 
@@ -12,9 +14,30 @@ except ImportError:
 trace = pdb.set_trace
 
 
+# Get logger that will be used by all clients of this module, and add extra log levels and methods
+log = logging.getLogger(sys.argv[0])
+VERBOSE = logging.DEBUG - 1
+logging.addLevelName(VERBOSE, "VERBOSE")
+log.verbose = lambda msg, *args, **kwargs: log.log(VERBOSE, msg, *args, **kwargs)
+ALWAYS = logging.CRITICAL
+logging.addLevelName(ALWAYS, "ALWAYS")
+log.always = log.critical
+NEVER = logging.NOTSET - 1
+logging.addLevelName(NEVER, "NEVER")
+log.never = lambda msg, *args, **kwargs: log.log(NEVER, msg, *args, **kwargs)
+
+# Export log functions
+log_verbose = log.verbose
+log_debug = log.debug
+log_info = log.info
+log_always = log.always
+log_warning = log.warning
+log_error = log.error
+log_never = log.never
+
 
 def rtrim(text, trim):
-    """ removesuffix """
+    """ remove suffix """
     l = len(trim)
     if text.endswith(trim):
         return text[:-l]
@@ -86,40 +109,22 @@ def read_multilines(file_path, join=False, join_str=" "):
         yield item
 
 
-__DEBUG_PRINT = False
-__DEBUG_VERBOSE = False
-
-
-def print_debug(text=""):
-    if __DEBUG_PRINT:
-        print(text)
-
-
-def print_verbose(text=""):
-    if __DEBUG_VERBOSE:
-        print(text)
-
-
-def global_set(name, val):
-    globals()[name] = val
-
-
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="Use test data", action="store_true")
     parser.add_argument("--var", help="File variant to use", default="")
-    parser.add_argument("-d", "--debug", help="Debug output", action="store_true")
-    parser.add_argument("-v", "--verbose", help="Verbose Debug output", action="store_true")
+    parser.add_argument('-v', '--verbose', action='count', default=0)
     if args_func:
         args_func(parser)
     args = parser.parse_args()
 
-    # Set debug if verbose is set
-    if args.verbose:
-        args.debug = True
+    log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
+    logging.basicConfig(
+        level=log_level,
+        handlers=[logging.StreamHandler(sys.stdout)],
+        format='%(message)s'
+    )
 
-    global_set("__DEBUG_PRINT", args.debug)
-    global_set("__DEBUG_VERBOSE", args.verbose)
     return args
 
 
@@ -134,3 +139,18 @@ def data_file_path(suffix, var="", ext="txt"):
 def data_file_path_main(test):
     suffix = "test" if test else "full"
     return data_file_path(suffix)
+
+
+def grouper(iterable, n=2, fillvalue=None, to_list=False):
+    """ Group iterable into n-length chunks
+        grouper('abcdefg', 3) --> ('a','b','c'), ('d','e','f'), ('g',None,None)
+    """
+    # Replicate iterable n times
+    iterables = itertools.tee(iterable, n)
+    # Slice iterables
+    iterables_sliced = [itertools.islice(iterables[i], i, None, n) for i in range(n)]
+    # Zip
+    result = itertools.zip_longest(*iterables_sliced, fillvalue=fillvalue)
+    if to_list:
+        result = list(result)
+    return result
