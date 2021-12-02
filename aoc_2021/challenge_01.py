@@ -15,7 +15,7 @@ def array_diff(array, n=1):
 
 def main():
     args = parse_args()
-    data = np.array(list(read_list_int(data_file_path_main(test=args.test))))
+    data = np.array(read_list_int(data_file_path_main(test=args.test), to_list=True))
 
     log_always("Part 1:")
     result_1 = np.sum(array_diff(data) > 0)

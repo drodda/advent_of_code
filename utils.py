@@ -84,8 +84,11 @@ def read_list_int(file_path, strip=True, to_list=False):
         strip will remove empty lines
         to_list will return a list instead of a generator
     """
-    lines = read_lines(file_path, strip, to_list)
-    return map(int, lines)
+    lines = read_lines(file_path, strip)
+    result = map(int, lines)
+    if to_list:
+        return list(result)
+    return result
 
 
 def read_multilines(file_path, join=False, join_str=" "):
