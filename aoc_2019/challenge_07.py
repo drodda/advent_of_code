@@ -15,9 +15,22 @@ intcode_vm.log_debug = log_never
 PHASES_LEN = 5
 
 
-def run_simulation(data, phases):
+def data_str(data):
+    if len(data) < 6:
+        return " ".join(map(str, data))
+    return "{} ... {}".format(" ".join(map(str, data[:3])), " ".join(map(str, data[-3:])))
+
+
+def run_simulation(data, phases, feedback=False):
     vms = []
-    queues = [queue.Queue() for i in range(len(phases) + 1)]
+    if feedback:
+        queues = [queue.Queue() for i in range(len(phases))]
+        final_queue = queues[0]
+        queues.append(final_queue)
+    else:
+        queues = [queue.Queue() for i in range(len(phases) + 1)]
+        final_queue = queues[-1]
+    # Load phases
     for i, phase in enumerate(phases):
         queues[i].put(phase)
     # Load initial power
@@ -29,36 +42,47 @@ def run_simulation(data, phases):
         vm.start()
     for vm in vms:
         vm.join()
-    if queues[-1].empty():
+    if final_queue.empty():
         log_error(f"Warning: No output from from {phases}")
         return None
-    return queues[-1].get()
+    return final_queue.get()
 
 
-def data_str(data):
-    if len(data) < 6:
-        return " ".join(map(str, data))
-    return "{} ... {}".format(" ".join(map(str, data[:3])), " ".join(map(str, data[-3:])))
-
-
-def main():
-    args = parse_args()
-
-    lines = read_lines(data_file_path_main(test=args.test))
+def solve(data_file, phases, feedback=False):
+    result = None
+    lines = read_lines(data_file)
     for i, line in enumerate(lines):
         data = list(map(int, line.split(",")))
         log_always(f"{i}: {data_str(data)}")
 
-        phase_permutations = itertools.permutations(range(PHASES_LEN))
+        phase_permutations = itertools.permutations(phases)
         result_max = None
         result_phases = None
         for phases in phase_permutations:
             log_debug(phases)
-            result = run_simulation(data, phases)
-            if result_max is None or result > result_max:
-                result_max = result
+            result_sim = run_simulation(data, phases, feedback)
+            if result_max is None or result_sim > result_max:
+                result_max = result_sim
                 result_phases = phases
         log_always(f"{result_max} from phases {result_phases}")
+        if result is None or result_max > result:
+            result = result_max
+    return result
+
+
+def main():
+    args = parse_args()
+    log_always("Part 1:")
+    phases = list(range(PHASES_LEN))
+    result = solve(data_file_path_main(test=args.test), phases, False)
+    log_always(result)
+    log_always("Part 2:")
+    data_file = data_file_path_main(test=args.test)
+    if args.test:
+        data_file = data_file_path("test", "b")
+    phases = list(range(5, 5+PHASES_LEN))
+    result = solve(data_file, phases, True)
+    log_always(result)
 
 
 if __name__ == "__main__":
