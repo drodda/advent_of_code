@@ -2,17 +2,36 @@ import operator
 import copy
 import threading
 import queue
+from collections import defaultdict
 
 from utils import *
 
 
-__all__ = ["VM", "VMThread"]
+__all__ = [
+    "VM", "VMThread",
+    "list_pretty",
+]
+
+
+def list_pretty(data, max_len=6):
+    """ String-ify a list. If list has more than max_lem elements, truncate """
+    if len(data) < max_len:
+        return " ".join(map(str, data))
+    return "{} ... {}".format(" ".join(map(str, data[:3])), " ".join(map(str, data[-3:])))
 
 
 class VM:
+    class MODE:
+        POSITION = 0
+        IMMEDIATE = 1
+        RELATIVE = 2
+
     def __init__(self, mem, input_queue=None, input_timeout=5, output_queue=None, tid=None):
-        self.mem = copy.copy(mem)
+        # Memory can be infinite and defaults to 0
+        self.mem = defaultdict(int)
+        self.mem.update(enumerate(mem))
         self.ip = 0
+        self.relative_base = 0
         self.output = output_queue if output_queue is not None else queue.Queue()
         if isinstance(input_queue, queue.Queue):
             self.input = input_queue
@@ -27,7 +46,7 @@ class VM:
     def decode_instruction(self):
         """ Decode instruction at self.ip and return opcode and modes """
         # Convert to str and pad
-        instruction_str = str(self.mem[self.ip]).zfill(5)
+        instruction_str = str(self.mem_load(self.ip)).zfill(5)
         # Extract digits
         mode_3 = int(instruction_str[0])
         mode_2 = int(instruction_str[1])
@@ -37,19 +56,39 @@ class VM:
 
     def operand(self, n):
         """ Get the nth operand """
-        return self.mem[self.ip + n]
+        return self.mem_load(self.ip + n)
+
+    def mem_load(self, addr):
+        if addr < 0:
+            raise RuntimeError(f"Access negative memory: {self.ip}")
+        return self.mem[addr]
+
+    def mem_put(self, addr, val):
+        if addr < 0:
+            raise RuntimeError(f"Access negative memory: {self.ip}")
+        self.mem[addr] = val
 
     def load(self, mode, operand):
-        """ Load value based on mode: True = literal, False = dereference memory """
-        if mode:
+        """ Load value based on mode: 0 = address, 1 = literal, 2 = relative address """
+        if mode == self.MODE.IMMEDIATE:
             return operand
-        return self.mem[operand]
+        elif mode == self.MODE.POSITION:
+            return self.mem_load(operand)
+        elif mode == self.MODE.RELATIVE:
+            return self.mem_load(self.relative_base + operand)
+        else:
+            raise RuntimeError(f"Bad mode {mode}")
 
     def put(self, mode, operand, val):
-        """ Put value in memory at operand """
-        if mode:
+        """ Store value based on mode: 0 = address, 2 = relative address """
+        if mode == self.MODE.IMMEDIATE:
             raise RuntimeError("Can not put in immediate mode")
-        self.mem[operand] = val
+        elif mode == self.MODE.POSITION:
+            self.mem_put(operand, val)
+        elif mode == self.MODE.RELATIVE:
+            self.mem_put(self.relative_base + operand, val)
+        else:
+            raise RuntimeError(f"Bad mode {mode}")
 
     OPERATIONS_LLS = {
         # Load-Load-Store operations that take 3 params: p3 = operator(p1, p2)
@@ -59,7 +98,7 @@ class VM:
         8: lambda v1, v2: int(operator.eq(v1, v2)),
     }
     OPERATORS_EVAL_JUMP = {
-        # Load+Eval?Jump operations: Evaluate condition on p1 and (conditionally) jump to p2
+        # Condition for EVAL_JUMP operations
         5: bool,
         6: lambda c: not bool(c),
     }
@@ -100,6 +139,10 @@ class VM:
             p2 = self.load(mode_2, self.operand(2))
             if condition(p1):
                 next_ip = p2
+        elif opcode == 9:
+            # Adjust relative base by p1
+            next_ip += 1
+            self.relative_base += self.load(mode_1, self.operand(1))
         else:
             raise RuntimeError(f"Invalid instruction: {self.mem[self.ip]} at {self.ip}")
         self.ip = next_ip

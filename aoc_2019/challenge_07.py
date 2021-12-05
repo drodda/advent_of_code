@@ -15,12 +15,6 @@ intcode_vm.log_debug = log_never
 PHASES_LEN = 5
 
 
-def data_str(data):
-    if len(data) < 6:
-        return " ".join(map(str, data))
-    return "{} ... {}".format(" ".join(map(str, data[:3])), " ".join(map(str, data[-3:])))
-
-
 def run_simulation(data, phases, feedback=False):
     vms = []
     if feedback:
@@ -53,7 +47,7 @@ def solve(data_file, phases, feedback=False):
     lines = read_lines(data_file)
     for i, line in enumerate(lines):
         data = list(map(int, line.split(",")))
-        log_always(f"{i}: {data_str(data)}")
+        log_always(f"{i}: {list_pretty(data)}")
 
         phase_permutations = itertools.permutations(phases)
         result_max = None
