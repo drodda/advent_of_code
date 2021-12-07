@@ -11,9 +11,7 @@ from intcode_vm import VM
 
 def main():
     args = parse_args()
-    data_file = data_file_path_main(test=args.test)
-    data = open(data_file).read()
-    data = list(map(int, data.split(",")))
+    data = read_csv_int(data_file_path_main(test=args.test), to_list=True)
 
     log_always("Part 1")
     vm = VM(data, input_queue=[1])

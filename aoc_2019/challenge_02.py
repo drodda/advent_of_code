@@ -34,9 +34,7 @@ def find_vm_solution(mem, target):
 
 def main():
     args = parse_args()
-    data_file = data_file_path_main(test=args.test)
-    data = open(data_file).read()
-    data = list(map(int, data.split(",")))
+    data = read_csv_int(data_file_path_main(test=args.test), to_list=True)
 
     # Patch program
     patch_mem_values = {} if args.test else {1: 12, 2: 2}

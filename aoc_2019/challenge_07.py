@@ -44,9 +44,7 @@ def run_simulation(data, phases, feedback=False):
 
 def solve(data_file, phases, feedback=False):
     result = None
-    lines = read_lines(data_file)
-    for i, line in enumerate(lines):
-        data = list(map(int, line.split(",")))
+    for i, data in enumerate(read_csv_int_multiline(data_file, to_list=True)):
         log_always(f"{i}: {list_pretty(data)}")
 
         phase_permutations = itertools.permutations(phases)
