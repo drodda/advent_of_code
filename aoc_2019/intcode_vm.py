@@ -157,6 +157,11 @@ class VM:
             pass
         return
 
+    def run_until_output(self):
+        while self.output.empty():
+            self.step()
+        return self.output.get()
+
     @property
     def tid(self):
         return self._tid
