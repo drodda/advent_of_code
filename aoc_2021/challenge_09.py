@@ -14,47 +14,52 @@ from utils import *
 #   * (0,0) is top-left.
 
 
+def neighbours(point, dimensions):
+    """ Return cartesian neighbours of point (x,y), taking into account bounds (0,0) and dimensions (x_max,y_max) """
+    x, y = point
+    x_max, y_max = dimensions
+    if y > 0:
+        yield x, y - 1
+    if y < (y_max - 1):
+        yield x, y + 1
+    if x > 0:
+        yield x - 1, y
+    if x < (x_max - 1):
+        yield x + 1, y
+
+
 def find_low_points(data):
     """ Find all low points: lower than all surrounding points. Returns a list of (x, y) coordinates """
+    def _is_low_point(pt):
+        val = data[pt]
+        for _pt in neighbours(pt, data.shape):
+            if val >= data[_pt]:
+                return False
+        return True
     x_max, y_max = data.shape
     low_points = []
     for x in range(x_max):
         for y in range(y_max):
-            val = data[x, y]
-            if y > 0 and val >= data[x, y - 1]:
-                continue
-            if y < (y_max - 1) and val >= data[x, y + 1]:
-                continue
-            if x > 0 and val >= data[x - 1, y]:
-                continue
-            if x < (x_max - 1) and val >= data[x + 1, y]:
-                continue
-            low_points.append((x, y))
+            if _is_low_point((x, y)):
+                low_points.append((x, y))
     return low_points
 
 
-def calculate_basin_size(data, x, y):
+def calculate_basin_size(data, point):
     """ Count the number of points surrounded (x, y) that are not '9' """
-    x_max, y_max = data.shape
     # Keep track of set of points in the basin
     basin_points = set()
 
-    def _basin_search(_x, _y):
-        if data[_x, _y] == 9:
+    def _basin_search(pt):
+        if data[pt] == 9:
             return
-        if (_x, _y) in basin_points:
+        if pt in basin_points:
             return
-        basin_points.add((_x, _y))
+        basin_points.add(pt)
         # Recurse to cartesian neighbours of _x, _y
-        if _x > 0:
-            _basin_search(_x - 1, _y)
-        if _x < x_max - 1:
-            _basin_search(_x + 1, _y)
-        if _y > 0:
-            _basin_search(_x, _y - 1)
-        if _y < y_max - 1:
-            _basin_search(_x, _y + 1)
-    _basin_search(x, y)
+        for _pt in neighbours(pt, data.shape):
+            _basin_search(_pt)
+    _basin_search(point)
     return len(basin_points)
 
 
@@ -71,7 +76,7 @@ def main():
     log_always("Part 2:")
     basin_sizes = [0] * len(low_points)
     for i, (x, y) in enumerate(low_points):
-        basin_size = calculate_basin_size(data, x, y)
+        basin_size = calculate_basin_size(data, (x, y))
         basin_sizes[i] = basin_size
         log_info(f"{x},{y}: {basin_size}")
 
