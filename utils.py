@@ -35,6 +35,9 @@ log_warning = log.warning
 log_error = log.error
 log_never = log.never
 
+# Suppress verbose logging from libraries
+logging.getLogger('asyncio').setLevel(logging.WARNING)
+
 
 def rtrim(text, trim):
     """ remove suffix """
