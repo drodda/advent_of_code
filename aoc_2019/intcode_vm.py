@@ -10,7 +10,12 @@ from utils import *
 __all__ = [
     "VM", "VMThread",
     "list_pretty",
+    'Empty'
 ]
+
+
+# Expose queue empty as it may be raised
+Empty = queue.Empty
 
 
 def list_pretty(data, max_len=6):
@@ -26,7 +31,7 @@ class VM:
         IMMEDIATE = 1
         RELATIVE = 2
 
-    def __init__(self, mem, input_queue=None, input_timeout=5, output_queue=None, tid=None):
+    def __init__(self, mem, input_queue=None, output_queue=None):
         # Memory can be infinite and defaults to 0
         self.mem = defaultdict(int)
         self.mem.update(enumerate(mem))
@@ -40,8 +45,14 @@ class VM:
             if input_queue is not None:
                 for v in input_queue:
                     self.input.put(v)
-        self._input_timeout = input_timeout
-        self._tid = tid
+
+    def _input(self):
+        """ Read input from input queue """
+        return self.input.get(timeout=0)
+
+    def _output(self, item):
+        """ Write to output queue """
+        self.output.put(item)
 
     def decode_instruction(self):
         """ Decode instruction at self.ip and return opcode and modes """
@@ -120,17 +131,14 @@ class VM:
         elif opcode == 3:
             # Input -> p1
             next_ip += 1
-            if self.input.empty():
-                log_debug(f"VM {self.tid}: Waiting for input - timeout {self._input_timeout}")
-            input_value = self.input.get(timeout=self._input_timeout, block=True)
+            input_value = self._input()
             self.put(mode_1, self.operand(1), input_value)
         elif opcode == 4:
             # p1 -> Output
             next_ip += 1
             p1 = self.operand(1)
             v = self.load(mode_1, p1)
-            self.output.put(v)
-            log_debug(f"VM {self.tid}: OUTPUT: ip {self.ip} addr {p1} val {v}")
+            self._output(v)
         elif opcode in self.OPERATORS_EVAL_JUMP:
             # Load+Eval?Jump operations: Evaluate condition on p1 and (conditionally) jump to p2
             next_ip += 2
@@ -148,30 +156,39 @@ class VM:
         self.ip = next_ip
 
     def run(self):
+        """ Loop until VM terminates """
         try:
-            log_verbose(f"VM {self.tid}: {self.ip} - {self.mem}")
             while True:
                 self.step()
-                log_verbose(f"VM {self.tid}: {self.ip} - {self.mem}")
         except StopIteration:
             pass
-        return
 
     def run_until_output(self):
+        """ Loop until the VM produces output, return the first output value
+            May raise StopIteration if VM finishes executing
+        """
         while self.output.empty():
             self.step()
         return self.output.get()
 
-    @property
-    def tid(self):
-        return self._tid
+    def run_until_input(self):
+        """ Loop until the VM requests input that has not already been provided
+            May raise StopIteration if VM finishes executing
+        """
+        try:
+            while True:
+                self.step()
+        except Empty:
+            # Expected: return to caller. Next use of step() or other runners will resume
+            pass
 
 
 class VMThread(VM, threading.Thread):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, mem, input_queue=None, output_queue=None, input_timeout=5):
+        super().__init__(mem, input_queue, output_queue)
+        self._input_timeout = input_timeout
         threading.Thread.__init__(self)
 
-    @property
-    def tid(self):
-        return self._tid if self._tid is not None else self.ident
+    def _input(self):
+        # Allow graceful get on input queue as input may not be available yet
+        return self.input.get(timeout=self._input_timeout, block=True)

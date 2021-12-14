@@ -30,7 +30,7 @@ def run_simulation(data, phases, feedback=False):
     # Load initial power
     queues[0].put(0)
     for i, phase in enumerate(phases):
-        vm = VMThread(data, input_queue=queues[i], output_queue=queues[i+1], tid=i)
+        vm = VMThread(data, input_queue=queues[i], output_queue=queues[i+1])
         vms.append(vm)
     for vm in vms:
         vm.start()
