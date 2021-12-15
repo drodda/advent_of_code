@@ -4,48 +4,47 @@ import os
 import re
 import sys
 import traceback
+from collections import deque
+
 import numpy as np
 
 from utils import *
 
 
-# def paths(grid, x, y, x_max, y_max):
-#     val = grid[y][x]
-#     if x == x_max and y == y_max:
-#         yield [val]
-#     else:
-#         if x < x_max:
-#             for _path in paths(grid, x + 1, y, x_max, y_max):
-#                 yield [val] + _path
-#         if y < y_max:
-#             for _path in paths(grid, x, y + 1, x_max, y_max):
-#                 yield [val] + _path
-#
-# DIRS = [
-#     np.array([1, 0]),
-#     np.array([0, 1]),
-# ]
-#
-# def _path_gen(len):
-#     if len == 0:
-#         yield []
-#     else:
-#         for _dir in DIRS:
-#             for _path in _path_gen(len - 1):
-#                 yield [_dir] + _path
-#
-# def path_gen(len):
-#     """ Calculate all possible paths to diagonal value """
-#     for _path in _path_gen(len):
-#         yield np.cumsum(_path, 0)
-#
-#
-#
-# def paths(len, dest):
-#     for i in range(len):
-#         pass
-#     pass
+DIRS = [
+    np.array([1, 0]),  # Down
+    np.array([0, 1]),  # Right
+    np.array([-1, 0]),  # Up
+    np.array([0, -1]),  # Left
+]
 
+
+def add_2d(c1, c2):
+    return c1[0] + c2[0], c1[1] + c2[1]
+
+
+def in_bounds_2d(c, limits):
+    return 0 <= c[0] <= limits[0] and 0 <= c[1] <= limits[1]
+
+
+def find_best_path(grid):
+    limits = add_2d(grid.shape, (-1, -1))
+    start = (0, 0)
+    best_paths = {start: 0}
+    path_heads = deque([(start, 0)])
+    while path_heads:
+        position, score = path_heads.popleft()
+        for _dir in DIRS:
+            _position = add_2d(position, _dir)
+            if in_bounds_2d(_position, limits):
+                _score = score + grid[_position]
+                if _position not in best_paths or _score < best_paths[_position]:
+                    # Found a new optimal way to get to _position: record it
+                    best_paths[_position] = _score
+                    if _position != limits:
+                        # Keep searching from that position
+                        path_heads.append((_position, _score))
+    return best_paths.get(limits)
 
 
 def main():
@@ -53,27 +52,11 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     grid = np.array([list(map(int, line)) for line in lines], dtype=int)
 
-    # CUT = 10
-    # grid = grid[:CUT, :CUT]
-    print(grid)
-
-    score_best = np.zeros(grid.shape, dtype=int)
-    # Fill top/left edges
-    for x in range(1, grid.shape[1]):
-        score_best[0, x] = score_best[0, x - 1] + grid[0, x]
-    for y in range(1, grid.shape[0]):
-        score_best[y, 0] = score_best[y - 1, 0] + grid[y, 0]
-    # print(score_best)
-    # Fill not top/left edges
-    for y in range(1, grid.shape[0]):
-        for x in range(1, grid.shape[1]):
-            score_best[y, x] = min(score_best[y - 1, x], score_best[y, x - 1]) + grid[y, x]
-    print(score_best)
-
     log_always("Part 1:")
-    log_always(score_best[-1, -1])
+    result = find_best_path(grid)
+    log_always(result)
 
-    log_always("Part 2:")
+    # log_always("Part 2:")
 
 
 if __name__ == "__main__":
