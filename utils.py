@@ -12,11 +12,55 @@ except ImportError:
     import pdb
 
 
+# Get logger that will be used by all clients of this module, and add extra log levels and methods
+log = logging.getLogger(sys.argv[0])
+
+
+__all__ = [
+    "SCRIPT_BASE", "data_file_path", "data_file_path_main", "parse_args", "trace",
+    "log", "log_verbose", "log_never", "log_debug", "log_info", "log_warning", "log_always", "log_error",
+    "ltrim", "rtrim", "str_reversed",
+    "read_lines", "read_multilines", "read_list_int", "read_csv_int", "read_csv_int_multiline",
+    "grouper",
+    "HeapQ",
+]
+
+
+# Get script name
+SCRIPT_BASE, _ = os.path.splitext(os.path.basename(sys.argv[0]))
+
+
+def data_file_path(suffix, var="", ext="txt"):
+    return os.path.join("data", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
+
+
+def data_file_path_main(test):
+    suffix = "test" if test else "full"
+    return data_file_path(suffix)
+
+
+def parse_args(args_func=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--test", help="Use test data", action="store_true")
+    parser.add_argument("--var", help="File variant to use", default="")
+    parser.add_argument('-v', '--verbose', action='count', default=0)
+    if args_func:
+        args_func(parser)
+    args = parser.parse_args()
+
+    log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
+    logging.basicConfig(
+        level=log_level,
+        handlers=[logging.StreamHandler(sys.stdout)],
+        format='%(message)s'
+    )
+    return args
+
+
+# Export trace function for debugging
 trace = pdb.set_trace
 
 
-# Get logger that will be used by all clients of this module, and add extra log levels and methods
-log = logging.getLogger(sys.argv[0])
 VERBOSE = logging.DEBUG - 1
 logging.addLevelName(VERBOSE, "VERBOSE")
 log.verbose = lambda msg, *args, **kwargs: log.log(VERBOSE, msg, *args, **kwargs)
@@ -42,20 +86,20 @@ logging.getLogger('asyncio').setLevel(logging.WARNING)
 
 def rtrim(text, trim):
     """ remove suffix """
-    l = len(trim)
     if text.endswith(trim):
-        return text[:-l]
+        return text[:-len(trim)]
     return text
 
 
 def ltrim(text, trim):
-    l = len(trim)
+    """ Remove prefix """
     if text.startswith(trim):
-        return text[l:]
+        return text[len(trim):]
     return text
 
 
 def str_reversed(text):
+    """ Reverse string, return string """
     return text[::-1]
 
 
@@ -103,11 +147,13 @@ def _csv_to_int(line, to_list=False):
 
 
 def read_csv_int(file_path, to_list=False):
+    """ Read a single-line CSV, return a list of strings """
     with open(file_path) as f:
         return _csv_to_int(f.read(), to_list=to_list)
 
 
 def read_csv_int_multiline(file_path, to_list=False):
+    """ Read a single-line CSV, return a list of lists of strings """
     with open(file_path) as f:
         for line in f:
             yield _csv_to_int(line, to_list=to_list)
@@ -132,38 +178,6 @@ def read_multilines(file_path, join=False, join_str=" "):
         if join:
             item = join_str.join(item)
         yield item
-
-
-def parse_args(args_func=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--test", help="Use test data", action="store_true")
-    parser.add_argument("--var", help="File variant to use", default="")
-    parser.add_argument('-v', '--verbose', action='count', default=0)
-    if args_func:
-        args_func(parser)
-    args = parser.parse_args()
-
-    log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
-    logging.basicConfig(
-        level=log_level,
-        handlers=[logging.StreamHandler(sys.stdout)],
-        format='%(message)s'
-    )
-
-    return args
-
-
-# Get script name
-SCRIPT_BASE, _ = os.path.splitext(os.path.basename(sys.argv[0]))
-
-
-def data_file_path(suffix, var="", ext="txt"):
-    return os.path.join("data", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
-
-
-def data_file_path_main(test):
-    suffix = "test" if test else "full"
-    return data_file_path(suffix)
 
 
 def grouper(iterable, n=2, fillvalue=None, to_list=False):
