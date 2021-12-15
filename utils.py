@@ -3,6 +3,7 @@ import itertools
 import logging
 import os
 import sys
+import heapq
 
 
 try:
@@ -178,3 +179,21 @@ def grouper(iterable, n=2, fillvalue=None, to_list=False):
     if to_list:
         result = list(result)
     return result
+
+
+class HeapQ:
+    """ Wrapper around heapq from standard library """
+    def __init__(self, items=None):
+        self._h = []
+        if items is not None:
+            for item in items:
+                self.push(item)
+
+    def push(self, item):
+        heapq.heappush(self._h, item)
+
+    def pop(self):
+        return heapq.heappop(self._h)
+
+    def __bool__(self):
+        return bool(self._h)
