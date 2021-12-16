@@ -3,7 +3,7 @@
 import sys
 import traceback
 
-from utils import *
+from common.utils import *
 
 
 INPUT_TEST = "389125467"

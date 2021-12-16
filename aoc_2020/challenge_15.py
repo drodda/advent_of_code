@@ -3,7 +3,7 @@
 import sys
 import traceback
 
-from utils import *
+from common.utils import *
 
 
 LEN_PART1 = 2020

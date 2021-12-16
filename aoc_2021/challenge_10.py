@@ -4,7 +4,7 @@ import sys
 import traceback
 import queue
 
-from utils import *
+from common.utils import *
 
 
 SYM_MAP = {

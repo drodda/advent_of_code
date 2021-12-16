@@ -4,7 +4,7 @@ import sys
 import copy
 import traceback
 
-from utils import *
+from common.utils import *
 
 
 SYM_O = "#"   # Occupied

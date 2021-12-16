@@ -5,7 +5,7 @@ import sys
 import traceback
 import numpy as np
 
-from utils import *
+from common.utils import *
 
 
 def visualise(grid):

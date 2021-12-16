@@ -4,7 +4,7 @@ import sys
 import traceback
 import re
 
-from utils import *
+from common.utils import *
 
 
 def parse_data_line(line):

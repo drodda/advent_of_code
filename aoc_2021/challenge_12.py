@@ -4,7 +4,7 @@ import sys
 import traceback
 from collections import defaultdict
 
-from utils import *
+from common.utils import *
 
 
 def find_paths(node_map, path=None, extra_stops=0):

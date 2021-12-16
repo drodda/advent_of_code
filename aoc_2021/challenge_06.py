@@ -4,7 +4,7 @@ import sys
 import traceback
 from collections import Counter
 
-from utils import *
+from common.utils import *
 
 
 SPAWN_FIRST = 9

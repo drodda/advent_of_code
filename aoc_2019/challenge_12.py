@@ -5,7 +5,7 @@ import re
 import traceback
 import numpy as np
 
-from utils import *
+from common.utils import *
 
 
 def step_axis(coords, velocities):

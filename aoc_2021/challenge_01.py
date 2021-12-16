@@ -4,7 +4,7 @@ import sys
 import traceback
 import numpy as np
 
-from utils import *
+from common.utils import *
 
 
 def array_diff(array, n=1):

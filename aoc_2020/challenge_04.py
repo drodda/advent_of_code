@@ -4,7 +4,7 @@ import sys
 import traceback
 import re
 
-from utils import *
+from common.utils import *
 
 
 FIELDS_REQUIRED = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]

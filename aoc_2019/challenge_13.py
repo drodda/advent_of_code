@@ -6,7 +6,7 @@ import queue
 import time
 import traceback
 
-from utils import *
+from common.utils import *
 from intcode_vm import *
 
 try:
