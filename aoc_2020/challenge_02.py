@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import os
 import sys
 import traceback
-import ipdb as pdb
 import re
 
 from utils import *

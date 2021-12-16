@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
 import traceback
 import json
 import itertools
-# import numpy as np
 
 from utils import *
 
