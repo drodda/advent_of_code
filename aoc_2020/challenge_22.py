@@ -4,7 +4,7 @@ import sys
 import traceback
 import copy
 
-from utils import *
+from common.utils import *
 
 
 ###############################################################################

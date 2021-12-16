@@ -5,7 +5,7 @@ import traceback
 import json
 import itertools
 
-from utils import *
+from common.utils import *
 
 
 LEN = 36

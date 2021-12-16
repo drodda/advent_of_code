@@ -5,7 +5,7 @@ import traceback
 import operator
 import collections
 
-from utils import *
+from common.utils import *
 
 
 # Mapping between operation symbol and operation

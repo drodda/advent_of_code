@@ -5,7 +5,7 @@ import traceback
 import re
 from collections import defaultdict
 
-from utils import *
+from common.utils import *
 
 
 def parse_line(line):

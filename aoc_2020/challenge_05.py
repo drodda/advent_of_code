@@ -5,7 +5,7 @@ import traceback
 import re
 import numpy as np
 
-from utils import *
+from common.utils import *
 
 
 BITS_ROW = 7

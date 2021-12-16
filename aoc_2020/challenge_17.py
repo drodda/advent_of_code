@@ -5,7 +5,7 @@ import traceback
 import itertools
 import collections
 
-from utils import *
+from common.utils import *
 
 
 N_STEPS = 6

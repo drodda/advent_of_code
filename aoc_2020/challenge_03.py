@@ -3,7 +3,7 @@
 import sys
 import traceback
 
-from utils import *
+from common.utils import *
 
 
 def count_trees_in_path(lines, start_x=0, dx=3, dy=1):

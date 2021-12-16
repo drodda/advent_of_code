@@ -5,7 +5,7 @@ import sys
 import traceback
 from collections import defaultdict
 
-from utils import *
+from common.utils import *
 
 
 def parse_item(text):

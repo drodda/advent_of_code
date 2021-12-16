@@ -4,7 +4,7 @@ import sys
 import traceback
 import math
 
-from utils import *
+from common.utils import *
 
 
 class FerryA:
