@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import queue
 import time
 import traceback
@@ -62,17 +63,16 @@ def visualise(world, position):
         None: " ",
     }
     print("================")
-    for y in range(y_max, y_min - 1, -1):
-        for x in range(x_min, x_max + 1):
+    for y in range(y_max, y_min - 2, -1):
+        for x in range(x_min - 1, x_max + 1):
             print("D" if (x, y) == position else symbols[world.get((x, y))], end="")
         print()
     print("================")
-
+    sys.stdout.flush()
+    time.sleep(0.05)
 
 
 def robot_move(vm, world, position, direction):
-    time.sleep(1)
-    visualise(world, position)
     print("running ...")
     vm.run_until_input()
     print(f"Input requested - {direction}")
@@ -100,64 +100,43 @@ def robot_move(vm, world, position, direction):
     return position, moved, oxygen_found
 
 
-def robot_search(vm, world, position, direction):
-    """ returns: position, oxygen_found, reverse_direction """
-    direction_ccw = DIRECTIONS_CCW[direction]
-    while True:
-        # First try to move the CCW direction. If robot can move, return reverse_direction
-        position, moved, oxygen_found = robot_move(vm, world, position, direction_ccw)
-        if oxygen_found or moved:
-            return position, True, oxygen_found
-        # Next try to move the desired direction. If robot can't move, return
-        position, moved, oxygen_found = robot_move(vm, world, position, direction)
-        if oxygen_found or not moved:
-            return position, False, oxygen_found
-
-
-def find_oxygen(data):
+def map_world_edge(data, show_visualise=False):
     vm = VM(data)
     position = (0, 0)
     world = {position: SPACE_VOID}
+    oxygen_position = None
 
     # Move North until a wall is found
     while True:
         position, moved, oxygen_found = robot_move(vm, world, position, DIRECTION_NORTH)
+        if show_visualise:
+            visualise(world, position)
         if oxygen_found:
-            return position
+            oxygen_position = position
         if not moved:
             break
-    # Move east and south
-    for direction in [DIRECTION_EAST, DIRECTION_SOUTH]:
-        while True:
-            position, moved, oxygen_found = robot_move(vm, world, position)
-            if oxygen_found:
-                return position
-            if not moved:
-                break
 
-
+    direction = DIRECTION_EAST
+    end_condition = (position, direction)
     while True:
-        for direction in [DIRECTION_NORTH, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST]:
-            while True:
-                vm.run_until_input()
-                print(f"Input requested - {direction}")
-                vm.input.put(direction)
-                print("running ...")
-                event = vm.run_until_output()
-                print(f"Got output: {event}")
-                _position = position_move(position, direction)
-                if event == EVENT_MOVED:
-                    position = _position
-                    world[position] = SPACE_VOID
-                elif event == EVENT_MOVED_OXYGEN:
-                    position = _position
-                    world[position] = SPACE_OXYGEN
-                    return position
-                elif event == EVENT_NO_MOVE:
-                    world[_position] = SPACE_WALL
-                    # Change direction
-                    break
+        # Move in direction
+        position, moved, oxygen_found = robot_move(vm, world, position, direction)
+        if show_visualise:
+            visualise(world, position)
+        if oxygen_found:
+            oxygen_position = position
+            # return position, world, oxygen_position
+        if moved:
+            # Next move will be CCW of direction to follow possible wall end
+            direction = DIRECTIONS_CCW[direction]
+        else:
+            # Next move will be CW of direction
+            direction = DIRECTIONS_CW[direction]
 
+        if end_condition == (position, direction):
+            break
+
+    return position, world, oxygen_position
 
 
 def main():
@@ -165,8 +144,8 @@ def main():
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
 
     log_always("Part 1")
-    oxygen_position = find_oxygen(data)
-    print(oxygen_position)
+    position, world, oxygen_position = map_world_edge(data, args.verbose)
+    print(position, world, oxygen_position)
 
 
 if __name__ == "__main__":
