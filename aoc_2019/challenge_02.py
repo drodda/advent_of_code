@@ -25,7 +25,7 @@ def find_vm_solution(mem, target):
         for y in range(100):
             vm = VM(patch_memory(mem, {1: x, 2: y}))
             vm.run()
-            if vm.mem[0] == target:
+            if vm.mem_load(0) == target:
                 return x, y
     raise NoSolution(f"No combination of start values will produce result {target}")
 
@@ -43,7 +43,7 @@ def main():
     log_always("Part 1")
     vm = VM(patch_memory(data, patch_mem_values))
     vm.run()
-    log_always(vm.mem[0])
+    log_always(vm.mem_load(0))
 
     if not args.test:
         log_always("Part 2")
