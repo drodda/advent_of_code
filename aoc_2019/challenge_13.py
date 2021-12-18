@@ -1,20 +1,12 @@
 #!/usr/bin/env python3
 
-import os
 import sys
 import queue
-import time
 import traceback
 
 from common.utils import *
+from common.pygame_visualise import *
 from intcode_vm import *
-
-try:
-    # Import pygame for to visualise output if it is installed
-    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-    import pygame
-except ImportError:
-    pygame = None
 
 
 OBJECT_EMPTY = 0
@@ -28,56 +20,23 @@ INPUT_LEFT = -1
 INPUT_RIGHT = 1
 
 
-COLOR_BLANK = (64, 64, 64)  # Grey
-COLOR_MAP = {
-    OBJECT_EMPTY: COLOR_BLANK,
-    OBJECT_WALL: (0, 0, 0),  # Black
-    OBJECT_BLOCK: (252, 186, 3),  # Orange
-    OBJECT_HORIZONTAL_PADDLE: (150, 117, 60),  # Brown
-    OBJECT_BALL: (9, 181, 66),  # Green
-}
-DISPLAY_SCALE = 20
+class Visualiser(PyGameVisualise):
+    color_map = {
+        OBJECT_EMPTY: Color.GREY,
+        OBJECT_WALL: Color.BLACK,
+        OBJECT_BLOCK: Color.ORANGE,
+        OBJECT_HORIZONTAL_PADDLE: Color.BROWN,
+        OBJECT_BALL: Color.GREEN,
+    }
 
+    def __init__(self, x_max, y_max):
+        super().__init__(x_max, y_max, 20, Color.GREY)
 
-def display_scale(v):
-    """ Scale coordinate to display """
-    return v * DISPLAY_SCALE
-
-
-def visualise_init(x_max, y_max):
-    """ Init pygame. Return screen object """
-    pygame.init()
-    screen = pygame.display.set_mode(((x_max + 1) * DISPLAY_SCALE, (y_max + 1) * DISPLAY_SCALE))
-    screen.fill(COLOR_BLANK)
-    return screen
-
-
-def visualise(screen, screen_data):
-    """ Draw to screen """
-    screen.fill(COLOR_BLANK)
-    for (x, y), val in screen_data.items():
-        _rect = pygame.draw.rect(
-            screen,
-            COLOR_MAP[val],
-            [display_scale(x), display_scale(y), DISPLAY_SCALE - 1, DISPLAY_SCALE - 1]
-        )
-    pygame.display.flip()
-    pygame.time.Clock().tick(60)
-
-
-def visualise_check_quit(timeout=None):
-    """ Check if pygame window has quit. Wait up to timeout seconds, if supplied """
-    # Initialise static function variable
-    visualise_check_quit._quit = getattr(visualise_check_quit, "_quit", False)
-    start = time.time()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                visualise_check_quit._quit = True
-        if visualise_check_quit._quit:
-            return True
-        if timeout is None or (time.time() - start) > timeout:
-            return False
+    def visualise(self, screen_data):
+        self.fill(Color.GREY)
+        for (x, y), val in screen_data.items():
+            self.draw_block(x, y, self.color_map[val], gap=1)
+        self.draw(60)
 
 
 def parse_output(vm):
@@ -123,14 +82,13 @@ def simulate_part_2(data, x_max, y_max, show_visualisation=False):
     score = 0
     ball_x = None
     paddle_x = None
-    if show_visualisation and pygame is not None:
-        screen = visualise_init(x_max, y_max)
-    else:
-        screen = None
+    visualiser = None
+    if show_visualisation:
+        visualiser = Visualiser(x_max, y_max)
     while True:
-        if pygame is not None and show_visualisation:
+        if show_visualisation:
             # Quit if the pygame window is closed
-            if visualise_check_quit():
+            if visualiser.check_quit():
                 log_always("Exiting because window has quit")
                 break
         _quit = False
@@ -146,10 +104,9 @@ def simulate_part_2(data, x_max, y_max, show_visualisation=False):
         score = _score if _score is not None else score
         paddle_x = _paddle_x if _paddle_x is not None else paddle_x
         ball_x = _ball_x if _ball_x is not None else ball_x
-        # Draw to screen
-        if show_visualisation and pygame is not None:
-            visualise(screen, screen_data)
-            time.sleep(1 / 1000)
+        if show_visualisation:
+            # Draw to screen
+            visualiser.visualise(screen_data)
         if _quit:
             break
         # Send input to VM
@@ -165,9 +122,8 @@ def simulate_part_2(data, x_max, y_max, show_visualisation=False):
             vm.input.put(INPUT_NONE)
 
     # If visualising, on end keep screen open
-    if show_visualisation and pygame is not None:
-        visualise(screen, screen_data)
-        visualise_check_quit(3)
+    if show_visualisation:
+        visualiser.check_quit(3)
     return score
 
 
