@@ -33,8 +33,8 @@ class VM:
 
     def __init__(self, mem, input_queue=None, output_queue=None):
         # Memory can be infinite and defaults to 0
-        self.mem = defaultdict(int)
-        self.mem.update(enumerate(mem))
+        self.mem_ro = mem
+        self.mem_rw = {}
         self.ip = 0
         self.relative_base = 0
         self.output = output_queue if output_queue is not None else queue.Queue()
@@ -72,12 +72,15 @@ class VM:
     def mem_load(self, addr):
         if addr < 0:
             raise RuntimeError(f"Access negative memory: {self.ip}")
-        return self.mem[addr]
+        try:
+            return self.mem_rw.get(addr, self.mem_ro[addr])
+        except IndexError:
+            return 0
 
     def mem_put(self, addr, val):
         if addr < 0:
             raise RuntimeError(f"Access negative memory: {self.ip}")
-        self.mem[addr] = val
+        self.mem_rw[addr] = val
 
     def load(self, mode, operand):
         """ Load value based on mode: 0 = address, 1 = literal, 2 = relative address """
@@ -181,6 +184,17 @@ class VM:
         except Empty:
             # Expected: return to caller. Next use of step() or other runners will resume
             pass
+
+    def clone(self):
+        """ Create a new VM from this VM
+            New VM has new empty input and output queues, but otherwise is identical.
+            VMs share mem_ro for efficiency
+        """
+        new = self.__class__(self.mem_ro)
+        new.mem_rw = self.mem_rw.copy()
+        new.ip = self.ip
+        new.relative_base = self.relative_base
+        return new
 
 
 class VMThread(VM, threading.Thread):

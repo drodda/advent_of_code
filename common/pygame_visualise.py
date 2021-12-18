@@ -16,8 +16,10 @@ __all__ = [
 
 class Color:
     BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
     GREY = (64, 64, 64)
     ORANGE = (252, 186, 3)
+    RED = (252, 0, 0)
     BROWN = (150, 117, 60)
     GREEN = (9, 181, 66)
 
