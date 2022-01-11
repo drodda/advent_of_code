@@ -16,7 +16,8 @@ def to_str(arr):
     return "".join(map(str, arr))
 
 
-def run_simulation(data):
+def solve_part1(data):
+    data = np.array(data)
     _len = data.shape[0]
     for r in range(100):
         _data = np.zeros(data.shape, dtype=int)
@@ -27,40 +28,37 @@ def run_simulation(data):
             _data[i] = abs(np.sum(data * pattern)) % 10
         data = _data
         log_verbose(f"{r} = {_data}")
-    return data
+    result = to_str(data[:8])
+    return result
+
+
+def solve_part2(data):
+    offset = int(to_str(data[:7]))
+    data = np.array((data * 10000)[offset:])
+    for _ in range(100):
+        for i in range(len(data) - 2, -1, -1):
+            data[i] = (data[i] + data[i + 1]) % 10
+    result = to_str(data[:8])
+    return result
 
 
 def main():
     args = parse_args()
     lines = read_lines(data_file_path_main(test=args.test))
 
-
     for line in lines:
         log_info(line)
+        data = list(map(int, line))
+
         log_always("Part 1")
-        data = np.array(list(map(int, line)))
-        result = to_str(run_simulation(data))  # [:8]
+        result = solve_part1(data)
         log_always(result)
 
         log_always("Part 2")
-        offset = int(to_str(data[:7]))
-        print(offset)
-        _len = data.shape[0]
-        offset = offset % _len
-        print(offset)
-        result = to_str(np.roll(data, -offset)[:8])
-        print(result)
-        # data = np.tile(data, max(1, math.ceil(800 / _len)))
-        # result = run_simulation(data)
-        # log_always(result)
+        result = solve_part2(data)
+        log_always(result)
 
-        print()
-
-
-
-    # log_always(cost)
-    # log_always("Part 2")
-    # log_always(qtty_best)
+        log_always("")
 
 
 if __name__ == "__main__":
