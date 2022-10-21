@@ -22,7 +22,8 @@ __all__ = [
     "ltrim", "rtrim", "str_reversed",
     "read_lines", "read_multilines", "read_list_int", "read_csv_int", "read_csv_int_multiline",
     "grouper",
-    "HeapQ",
+    "make_hashable", "full_hash",
+    "HeapQ", "SetHeapQ",
 ]
 
 
@@ -195,6 +196,19 @@ def grouper(iterable, n=2, fillvalue=None, to_list=False):
     return result
 
 
+def make_hashable(v):
+    if isinstance(v, dict):
+        return hash(tuple((make_hashable(_k), make_hashable(_v)) for _k, _v in sorted(v.items())))
+    elif isinstance(v, list):
+        return hash(tuple(make_hashable(_v) for _v in v))
+    else:
+        return v
+
+
+def full_hash(v):
+    return hash(make_hashable(v))
+
+
 class HeapQ:
     """ Wrapper around heapq from standard library """
     def __init__(self, items=None):
@@ -211,3 +225,28 @@ class HeapQ:
 
     def __bool__(self):
         return bool(self._h)
+
+
+class SetHeapQ(HeapQ):
+    """ HeapQ implementation that keeps track of items in a set, implements __contains__ via set
+        NOTE: HeapQ can not contain the same item more than once
+    """
+    def __init__(self, items=None):
+        self._set = set()
+        super().__init__(items=items)
+
+    def push(self, item):
+        item_hash = hash(item)
+        if item_hash not in self._set:
+            super().push(item)
+            self._set.add(item_hash)
+
+    def pop(self):
+        item = super().pop()
+        item_hash = hash(item)
+        if item_hash in self._set:
+            self._set.remove(item_hash)
+        return item
+
+    def __contains__(self, item):
+        return item in self._set
