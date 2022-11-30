@@ -86,18 +86,18 @@ def calculate_next_direction(g, current_node, checkpoint_unlocked=False):
             continue
         # Ignore destinations via checkpoint unless checkpoint is unlocked
         if _path[-2] == CHECKPOINT_NAME and not checkpoint_unlocked:
-            log_debug(f"  Skipping {_path}")
+            log.debug(f"  Skipping {_path}")
             continue
         # Trim current node from _path
         _path = _path[1:]
         _path_length = len(_path)
         _destination = _path[0]
-        log_debug(f"  Can explore: {_name} via {_destination} for {_path_length}")
+        log.debug(f"  Can explore: {_name} via {_destination} for {_path_length}")
         # Find destination with shortest path
         if path_length is None or _path_length < path_length:
             destination = _destination
             path_length = _path_length
-    log_info(f"  Exploring: {destination}")
+    log.info(f"  Exploring: {destination}")
 
     if destination is not None:
         return destination
@@ -112,17 +112,17 @@ def all_combinations(items):
 
 
 def brute_force_checkpoint(vm, _dir, all_items):
-    log_info(f"Brute forcing items required to pass {CHECKPOINT_NAME}")
+    log.info(f"Brute forcing items required to pass {CHECKPOINT_NAME}")
     # Brute force all combinations of items
     for items_keep in all_combinations(all_items):
-        log_info(f"Trying: {items_keep}")
+        log.info(f"Trying: {items_keep}")
         # Collect items required
         for item in items_keep:
             vm.send(f"take {item}")
             vm.run_until_input()
-        log_debug("################################")
-        log_debug(vm.read(clear=True))
-        log_debug("################################")
+        log.debug("################################")
+        log.debug(vm.read(clear=True))
+        log.debug("################################")
 
         # Try to proceed
         vm.send(_dir)
@@ -131,31 +131,31 @@ def brute_force_checkpoint(vm, _dir, all_items):
         except StopIteration:
             # Succeeded!
             output = vm.read(clear=True)
-            log_debug("################################")
-            log_debug(output)
-            log_debug("################################")
+            log.debug("################################")
+            log.debug(output)
+            log.debug("################################")
             m = re.search(RE_RESULT, output)
             if m:
                 result = m.group("result")
                 return result
         output = vm.read(clear=True)
-        log_debug("################################")
-        log_debug(output)
-        log_debug("################################")
+        log.debug("################################")
+        log.debug(output)
+        log.debug("################################")
         if "Alert! Droids on this ship are heavier than the detected value" in output:
-            log_info("Failed: too light")
+            log.info("Failed: too light")
         elif "Alert! Droids on this ship are lighter than the detected value!" in output:
-            log_info("Failed: too heavy")
+            log.info("Failed: too heavy")
         else:
-            log_info("Error - expected failure did not occur")
+            log.info("Error - expected failure did not occur")
             break
         # Drop all items
         for item in items_keep:
             vm.send(f"drop {item}")
             vm.run_until_input()
-        log_debug("################################")
-        log_debug(vm.read(clear=True))
-        log_debug("################################")
+        log.debug("################################")
+        log.debug(vm.read(clear=True))
+        log.debug("################################")
 
     return None
 
@@ -170,25 +170,25 @@ def solve(data):
     checkpoint_unlocked = False
     while True:
         vm.run_until_input()
-        log_debug("################################")
-        log_debug(vm.read(clear=False))
-        log_debug("################################")
+        log.debug("################################")
+        log.debug(vm.read(clear=False))
+        log.debug("################################")
         current_node, description, dirs, items = parse_output(vm.read(clear=True))
         nx.relabel_nodes(g, {_current_node: current_node}, copy=False)
-        log_info(f"Entering: {current_node} ({'explored' if g.nodes[current_node]['explored'] else 'new'})")
+        log.info(f"Entering: {current_node} ({'explored' if g.nodes[current_node]['explored'] else 'new'})")
         g.nodes[current_node]['explored'] = True
 
         # Take all items from current node
         for item in items:
             if item in BAD_ITEMS:
-                log_info(f"Skipping Item: {item}")
+                log.info(f"Skipping Item: {item}")
             else:
-                log_info(f"Collecting Item: {item}")
+                log.info(f"Collecting Item: {item}")
                 vm.send(f"take {item}")
                 vm.run_until_input()
-                log_debug("################################")
-                log_debug(vm.read(clear=True))
-                log_debug("################################")
+                log.debug("################################")
+                log.debug(vm.read(clear=True))
+                log.debug("################################")
                 inventory.add(item)
 
         # Create new nodes for all directions
@@ -212,12 +212,12 @@ def solve(data):
                 # At checkpoint: Work out items required to be carried to proceed
                 # Drop all items
                 for item in inventory:
-                    log_info(f"Dropping Item: {item}")
+                    log.info(f"Dropping Item: {item}")
                     vm.send(f"drop {item}")
                     vm.run_until_input()
-                    log_debug("################################")
-                    log_debug(vm.read(clear=True))
-                    log_debug("################################")
+                    log.debug("################################")
+                    log.debug(vm.read(clear=True))
+                    log.debug("################################")
 
                 # Find new destination now that checkpoint is unlcoked
                 destination = calculate_next_direction(g, current_node, checkpoint_unlocked)
@@ -232,7 +232,7 @@ def solve(data):
                 destination = _path[1]
 
         _dir = g.get_edge_data(current_node, destination)["dir"]
-        log_info(f"Going {_dir} to {destination}")
+        log.info(f"Going {_dir} to {destination}")
         vm.send(_dir)
         _current_node = destination
 
@@ -245,11 +245,11 @@ def main():
         play_manual(data)
         return
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(data)
-    log_always("")
-    log_always("Result:")
-    log_always(result)
+    log.always("")
+    log.always("Result:")
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

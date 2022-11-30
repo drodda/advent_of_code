@@ -89,9 +89,9 @@ def solve(start, end, portals, paths, recursive_spaces=False):
         _, _, portal_name = portals[pos]
         if (pos, level) in explored:
             continue
-        log_debug(f"Searching {pos} {portal_name} level {level} cost {cost} via {path_str}")
+        log.debug(f"Searching {pos} {portal_name} level {level} cost {cost} via {path_str}")
         if pos == end and level == 0:
-            log_info(f"Result: {pos}: {portal_name} {path_str} = {cost}")
+            log.info(f"Result: {pos}: {portal_name} {path_str} = {cost}")
             return cost
         explored.add((pos, level))
 
@@ -110,8 +110,8 @@ def solve(start, end, portals, paths, recursive_spaces=False):
 
 def print_world(world):
     for y in range(len(world)):
-        log_debug("".join(world[y]))
-    log_debug("")
+        log.debug("".join(world[y]))
+    log.debug("")
 
 
 def main():
@@ -127,15 +127,15 @@ def main():
     # Find paths from each destination to all other destinations
     paths = {pos: find_paths(world, pos, portals.keys()) for pos in portals.keys()}
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(start, end, portals, paths)
-    log_always(result)
-    log_always("")
+    log.always(result)
+    log.always("")
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(start, end, portals, paths, recursive_spaces=True)
-    log_always(result)
-    log_always("")
+    log.always(result)
+    log.always("")
 
 
 if __name__ == "__main__":
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

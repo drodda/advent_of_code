@@ -79,10 +79,10 @@ def main():
     parse_args()
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
 
-    log_always("Part 1")
-    log_always(len(run_simulation(data, 0)))
+    log.always("Part 1")
+    log.always(len(run_simulation(data, 0)))
 
-    log_always("Part 2")
+    log.always("Part 2")
     grid = run_simulation(data, 1)
     visualise(grid)
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

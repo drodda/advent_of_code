@@ -49,10 +49,10 @@ def main():
         debug_print_data(vent_count_part1)
         print()
         debug_print_data(vent_count_part2)
-    log_always("Part 1:")
-    log_always(len([coord for coord, count in vent_count_part1.items() if count >= 2]))
-    log_always("Part 2:")
-    log_always(len([coord for coord, count in vent_count_part2.items() if count >= 2]))
+    log.always("Part 1:")
+    log.always(len([coord for coord, count in vent_count_part1.items() if count >= 2]))
+    log.always("Part 2:")
+    log.always(len([coord for coord, count in vent_count_part2.items() if count >= 2]))
 
 
 if __name__ == "__main__":

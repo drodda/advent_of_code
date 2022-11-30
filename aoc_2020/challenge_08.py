@@ -38,7 +38,7 @@ class VM:
         # Check for infinite loop
         if self.instruction_seen(instruction):
             raise ExecutionInfiniteLoop
-        log_verbose(f"{self.ip}: {self.acc}: {instruction[0]} {instruction[1]}")
+        log.verbose(f"{self.ip}: {self.acc}: {instruction[0]} {instruction[1]}")
         # Mark as run
         self.instruction_set_seen(instruction)
         instruction[2] = True
@@ -103,16 +103,16 @@ def main():
     args = parse_args()
     lines = read_lines(data_file_path_main(test=args.test))
     vm = VM(lines)
-    log_always("Part 1:")
+    log.always("Part 1:")
     try:
         vm.run()
     except ExecutionInfiniteLoop:
-        log_always(f"{vm.acc}")
+        log.always(f"{vm.acc}")
     except ExecutionException as e:
-        log_always(f"Execution finished: {e}")
+        log.always(f"Execution finished: {e}")
 
-    log_always()
-    log_always("Part 2:")
+    log.always()
+    log.always("Part 2:")
     if args.test:
         if args.test:
             lines = read_lines(data_file_path("test", "b"))
@@ -120,9 +120,9 @@ def main():
             try:
                 vm.run()
             except ExecutionInfiniteLoop:
-                log_always(f"{vm.acc}")
+                log.always(f"{vm.acc}")
             except ExecutionException as e:
-                log_always(f"Execution finished: {e}")
+                log.always(f"Execution finished: {e}")
 
     # Find instructions that were used in the infinite loop in Part 1
     used_instructions = [i for i in range(len(vm.instructions)) if vm.instruction_seen(vm.get_instruction(i))]
@@ -137,11 +137,11 @@ def main():
                 vm.reset()
                 vm.run()
             except ExecutionCompleted:
-                log_always(f"Swap {i} {action_new}->{action_orig}: Execution completed")
-                log_always(f"{vm.acc}")
+                log.always(f"Swap {i} {action_new}->{action_orig}: Execution completed")
+                log.always(f"{vm.acc}")
                 break
             except ExecutionException as e:
-                log_debug(f"Swap {i} {action_new}->{action_orig}: {e}")
+                log.debug(f"Swap {i} {action_new}->{action_orig}: {e}")
             instruction[0] = action_orig
 
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

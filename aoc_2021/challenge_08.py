@@ -94,7 +94,7 @@ def main():
     args = parse_args()
     data = read_lines(data_file_path_main(test=args.test), to_list=True)
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     result = 0
     for i, line in enumerate(data):
         output_values = line.split(" | ")[1].split(" ")
@@ -102,20 +102,20 @@ def main():
         for item in output_values:
             if len(item) in [2, 3, 4, 7]:
                 _result += 1
-        log_info(f"{i}: {_result}")
+        log.info(f"{i}: {_result}")
         result += _result
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     result = 0
     for i, line in enumerate(data):
         input_line, output_line = line.split(" | ")
         input_values = [item for item in input_line.split(" ")]
         output_values = [item for item in output_line.split(" ")]
         _result = solve(input_values, output_values)
-        log_info(f"{i}: {_result}")
+        log.info(f"{i}: {_result}")
         result += _result
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

@@ -66,13 +66,13 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     grid = np.array([list(map(int, line)) for line in lines], dtype=int)
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     result = find_best_path(grid)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     result = find_best_path(grid_part_2(grid))
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

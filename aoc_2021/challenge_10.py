@@ -44,27 +44,27 @@ def main():
                 stack.put(SYM_MAP[sym])
             else:
                 if stack.empty():
-                    log_info(f"{i}- {j}: Got symbol {sym}. Stack is empty")
+                    log.info(f"{i}- {j}: Got symbol {sym}. Stack is empty")
                     valid = False
                     break
                 _sym = stack.get()
                 if _sym != sym:
-                    log_info(f"{i} - {j}: Expected {_sym}, but found {sym} instead.")
+                    log.info(f"{i} - {j}: Expected {_sym}, but found {sym} instead.")
                     result1 += PART1_SCORE[sym]
                     valid = False
                     break
         if valid:
             missing = "".join(reversed(list(stack.queue)))
-            log_info(f"{i}: Incomplete. Missing {missing}")
+            log.info(f"{i}: Incomplete. Missing {missing}")
             part2_score = 0
             while not stack.empty():
                 sym = stack.get()
                 part2_score = part2_score * 5 + PART2_SCORE[sym]
             part2_scores.append(part2_score)
-    log_always("Part 1:")
-    log_always(result1)
-    log_always("Part 2:")
-    log_always(sorted(part2_scores)[round(len(part2_scores)/2)])
+    log.always("Part 1:")
+    log.always(result1)
+    log.always("Part 2:")
+    log.always(sorted(part2_scores)[round(len(part2_scores)/2)])
 
 
 if __name__ == "__main__":

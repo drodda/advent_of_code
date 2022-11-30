@@ -10,11 +10,11 @@ def main():
     args = parse_args()
     data = open(data_file_path_main(test=args.test)).read().strip()
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = data.count("(") - data.count(")")
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     level = 0
     result = None
     for i, c in enumerate(data):
@@ -22,7 +22,7 @@ def main():
         if level == -1:
             result = i + 1
             break
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

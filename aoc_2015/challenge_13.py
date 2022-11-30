@@ -23,7 +23,7 @@ def parse_input(lines):
                 val = -val
             result[name1][name2] = val
         else:
-            log_error(f"Bad line: {line}")
+            log.error(f"Bad line: {line}")
     return result
 
 
@@ -43,7 +43,7 @@ def find_best_arrangement(all_names, scores):
         if result is None or score > result:
             result = score
             beat_arrangement = arrangement
-        log_debug(f"{arrangement}: {score}")
+        log.debug(f"{arrangement}: {score}")
     return result, beat_arrangement
 
 
@@ -53,13 +53,13 @@ def main():
     scores = parse_input(lines)
     all_names = list(scores.keys())
 
-    log_always("Part 1")
+    log.always("Part 1")
     result, *_ = find_best_arrangement(all_names, scores)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result, *_ = find_best_arrangement(all_names + ["self"], scores)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -99,45 +99,45 @@ def main():
     other_tickets = list(map(parse_ticket, other_ticket_lines[1:]))
     cols = len(own_ticket)
 
-    log_always("Part 1")
+    log.always("Part 1")
     invalid_sum = 0
     valid_tickets = []
     for ticket in other_tickets:
         valid = True
         for val in ticket:
             if not valid_rules(rules, val):
-                log_verbose(f"Invalid: {val}")
+                log.verbose(f"Invalid: {val}")
                 invalid_sum += val
                 valid = False
         if valid:
             valid_tickets.append(ticket)
-    log_always(invalid_sum)
+    log.always(invalid_sum)
 
-    log_always("Part 2")
+    log.always("Part 2")
     # Iterate through value column finding all rules that are valid for each column
     valid_rules_per_col = [[]] * cols
-    log_debug("Valid rules per column:")
+    log.debug("Valid rules per column:")
     for i in range(cols):
         col_values = [ticket[i] for ticket in valid_tickets]
         col_valid_rules = valid_rules_from_list(rules, col_values)
-        log_debug("")
-        log_debug(f"{i}: {col_valid_rules}")
+        log.debug("")
+        log.debug(f"{i}: {col_valid_rules}")
         valid_rules_per_col[i] = col_valid_rules
     # Find the order of rules from the valid combinations
     col_rules = find_rules_order(valid_rules_per_col)
-    log_debug("")
-    log_debug("Ordered rules:")
-    log_debug(col_rules)
+    log.debug("")
+    log.debug("Ordered rules:")
+    log.debug(col_rules)
 
     part2_result = 1
-    log_debug("")
-    log_debug("Own ticket:")
+    log.debug("")
+    log.debug("Own ticket:")
     for i, rule in enumerate(col_rules):
         if rule.name.startswith("departure "):
-            log_debug(f"{i}: {rule}, {own_ticket[i]}")
+            log.debug(f"{i}: {rule}, {own_ticket[i]}")
             part2_result *= own_ticket[i]
-    log_debug("")
-    log_always(part2_result)
+    log.debug("")
+    log.always(part2_result)
 
 
 if __name__ == "__main__":
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

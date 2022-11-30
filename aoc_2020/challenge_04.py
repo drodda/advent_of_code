@@ -90,14 +90,14 @@ def validate_entry(entry):
 
     except KeyError as e:
         raise MissingField(e.args[0])
-    log_debug(f"Valid: {entry}")
+    log.debug(f"Valid: {entry}")
 
 
 def main():
     args = parse_args()
     entries = parse_input(data_file_path_main(test=args.test))
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     valid = 0
     for entry in entries:
         try:
@@ -108,9 +108,9 @@ def main():
             pass
         else:
             valid += 1
-    log_always(valid)
+    log.always(valid)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     # entries = parse_input(data_file_path(suffix="valid", var="b"))
     # entries = parse_input(data_file_path(suffix="invalid", var="b"))
     valid = 0
@@ -118,14 +118,14 @@ def main():
         try:
             validate_entry(entry)
         except MissingField as e:
-            log_debug(entry)
-            log_debug(e)
+            log.debug(entry)
+            log.debug(e)
         except InvalidField as e:
-            log_debug(entry)
-            log_debug(e)
+            log.debug(entry)
+            log.debug(e)
         else:
             valid += 1
-    log_always(valid)
+    log.always(valid)
 
 
 if __name__ == "__main__":
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

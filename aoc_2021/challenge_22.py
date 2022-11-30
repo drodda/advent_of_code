@@ -73,10 +73,10 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     data = [parse_line(line) for line in lines]
 
-    log_always("Part 1:")
-    log_always(calculate_cubes(data, 50))
-    log_always("Part 2:")
-    log_always(calculate_cubes(data))
+    log.always("Part 1:")
+    log.always(calculate_cubes(data, 50))
+    log.always("Part 2:")
+    log.always(calculate_cubes(data))
 
 
 if __name__ == "__main__":

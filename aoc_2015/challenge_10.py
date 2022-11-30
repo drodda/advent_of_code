@@ -9,11 +9,11 @@ from common.utils import *
 
 def iterate(val, n=1, verbose=False):
     if verbose:
-        log_always(f"0: {val}")
+        log.always(f"0: {val}")
     for i in range(n):
         val = "".join(["{}{}".format(len(list(g)), k) for k, g in itertools.groupby(val)])
         if verbose:
-            log_always(f"{i + 1}: {val}")
+            log.always(f"{i + 1}: {val}")
     return val
 
 
@@ -23,13 +23,13 @@ def main():
     n1 = 5 if args.test else 40
     n2 = 50 - n1
 
-    log_always("Part 1")
+    log.always("Part 1")
     _val = iterate(val, n1, args.test and args.verbose)
-    log_always(len(_val))
+    log.always(len(_val))
 
-    log_always("Part 2")
+    log.always("Part 2")
     _val = iterate(_val, n2)
-    log_always(len(_val))
+    log.always(len(_val))
 
 
 if __name__ == "__main__":
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

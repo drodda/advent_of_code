@@ -17,7 +17,7 @@ def parse_input(lines):
             name, *vals = m.groups()
             result.append((name, tuple(map(int, vals))))
         else:
-            log_error(f"Bad line: {line}")
+            log.error(f"Bad line: {line}")
     return result
 
 
@@ -48,7 +48,7 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
     ingredients = parse_input(lines)
     ingredient_vals = [vals for name, vals in ingredients]
-    log_info(ingredients)
+    log.info(ingredients)
 
     n_vals = len(ingredients)
 
@@ -57,16 +57,16 @@ def main():
     for combination in combinations(n_vals, 100):
         score = calculate_score(ingredient_vals, combination, (True, True, True, True))
         calories = calculate_score(ingredient_vals, combination, (False, False, False, False, True))
-        log_debug(f"{combination}: {score}")
+        log.debug(f"{combination}: {score}")
         result_1 = max(result_1, score)
         if calories == 500:
             result_2 = max(result_2, score)
 
-    log_always("Part 1")
-    log_always(result_1)
+    log.always("Part 1")
+    log.always(result_1)
 
-    log_always("Part 2")
-    log_always(result_2)
+    log.always("Part 2")
+    log.always(result_2)
 
 
 if __name__ == "__main__":
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

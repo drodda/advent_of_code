@@ -20,7 +20,7 @@ def calculate_part_2(data):
         distances = np.abs(data - i)
         # Power for each item is sum(1 ... n) = n(n+1)/2
         power = int(np.sum(distances * (distances + 1) / 2))
-        log_verbose(f"{i}: {int(power)}")
+        log.verbose(f"{i}: {int(power)}")
         if result is None or power < result:
             result = power
     return result
@@ -29,10 +29,10 @@ def calculate_part_2(data):
 def main():
     args = parse_args()
     data = np.array(read_csv_int(data_file_path_main(test=args.test), to_list=True))
-    log_always("Part 1:")
-    log_always(calculate_part_1(data))
-    log_always("Part 2:")
-    log_always(calculate_part_2(data))
+    log.always("Part 1:")
+    log.always(calculate_part_1(data))
+    log.always("Part 2:")
+    log.always(calculate_part_2(data))
 
 
 if __name__ == "__main__":

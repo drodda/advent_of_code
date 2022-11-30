@@ -37,12 +37,12 @@ def main():
     (polymer, *_), replacements_str = read_multilines(data_file_path_main(test=args.test))
     replacements = dict([line.split(" -> ") for line in replacements_str])
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     letter_count = simulate(polymer, replacements, 10)
-    log_always(max(letter_count.values()) - min(letter_count.values()))
-    log_always("Part 2:")
+    log.always(max(letter_count.values()) - min(letter_count.values()))
+    log.always("Part 2:")
     letter_count = simulate(polymer, replacements, 40)
-    log_always(max(letter_count.values()) - min(letter_count.values()))
+    log.always(max(letter_count.values()) - min(letter_count.values()))
 
 
 if __name__ == "__main__":

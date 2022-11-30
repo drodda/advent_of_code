@@ -18,7 +18,7 @@ def parse_input(lines):
             name, *vals = m.groups()
             result[name] = list(map(int, vals))
         else:
-            log_error(f"Bad line: {line}")
+            log.error(f"Bad line: {line}")
     return result
 
 
@@ -47,7 +47,7 @@ def simulate_part2(speeds, t):
         # Award points to winners
         for name in winners:
             points[name] += 1
-        log_debug(f"{i + 1}: {positions}, Points {points}, Winner {winners} @ {winning_distance}")
+        log.debug(f"{i + 1}: {positions}, Points {points}, Winner {winners} @ {winning_distance}")
     return points
 
 
@@ -57,18 +57,18 @@ def main():
     speeds = parse_input(lines)
     t = 1000 if args.test else 2503
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = 0
     for name, (speed, fly_time, rest_time) in speeds.items():
         d = calculate_distance(t, speed, fly_time, rest_time)
-        log_debug(f"{name}: {d}")
+        log.debug(f"{name}: {d}")
         result = max(result, d)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     points = simulate_part2(speeds, t)
     result = max(points.values())
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

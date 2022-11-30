@@ -136,13 +136,13 @@ def packet_add_version(packet):
 def main():
     data = open(data_file_path_main(test=False)).read()
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     packet = Packet.from_hex(data)
     result = packet_add_version(packet)
-    log_always(result)
-    log_always("Part 2:")
+    log.always(result)
+    log.always("Part 2:")
     result = packet.evaluate()
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

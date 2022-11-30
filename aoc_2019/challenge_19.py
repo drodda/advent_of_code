@@ -63,7 +63,7 @@ def print_row(y, start, end, row_max):
         count = end - start + 1
         tail = row_max - end - 1
         line = "." * start + "#" * count + "." * tail
-    log_info(f"{y: 5d} {count: 5d} {line}")
+    log.info(f"{y: 5d} {count: 5d} {line}")
 
 
 def solve_part1(beam_finder, verbose=False):
@@ -97,9 +97,9 @@ def solve_part2(beam_finder, test=False):
     while True:
         x = beam_finder.row_start(y + grid_size - 1)
         end = beam_finder.row_end(y)
-        log_debug(f"Row {y} {beam_finder.row_start(y)}:{end}, {y + grid_size - 1}: {x}")
+        log.debug(f"Row {y} {beam_finder.row_start(y)}:{end}, {y + grid_size - 1}: {x}")
         if (end - x + 1) >= grid_size:
-            log_info(f"Solution {x}:{x + grid_size + 1} {y}:{y + grid_size - 1}")
+            log.info(f"Solution {x}:{x + grid_size + 1} {y}:{y + grid_size - 1}")
             return x * 10000 + y
         y += 1
 
@@ -109,13 +109,13 @@ def main():
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
     beam_finder = BeamFinder(data)
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve_part1(beam_finder, verbose=(args.verbose >= 2))
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve_part2(beam_finder, test=args.test)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

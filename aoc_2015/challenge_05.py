@@ -34,10 +34,10 @@ def solve(lines, evaluator):
     result = 0
     for line in lines:
         if evaluator(line):
-            log_debug(f"Match:   {line}")
+            log.debug(f"Match:   {line}")
             result += 1
         else:
-            log_debug(f"No Match: {line}")
+            log.debug(f"No Match: {line}")
     return result
 
 
@@ -45,13 +45,13 @@ def main():
     args = parse_args()
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(lines, evaluator=evaluate_str_1)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(lines, evaluator=evaluate_str_2)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

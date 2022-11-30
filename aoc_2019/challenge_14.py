@@ -54,22 +54,22 @@ def main():
         _resource, _qtty_made, _inputs = parse_line(line)
         resource_map[_resource] = (_qtty_made, _inputs)
 
-    log_always("Part 1")
+    log.always("Part 1")
     cost = calculate_cost(resource_map, "FUEL")
-    log_always(cost)
+    log.always(cost)
 
-    log_always("Part 2")
+    log.always("Part 2")
     ore_limit = 1000000000000
     qtty_best = 1
     while True:
         # Calculae the cost to build based on current cost and qtty, or at least 1 more than the previous
         qtty = max(math.floor(ore_limit / cost * qtty_best), qtty_best + 1)
         cost = calculate_cost(resource_map, "FUEL", qtty, None)
-        log_info(f"Cost to build {qtty} fuel: {cost}")
+        log.info(f"Cost to build {qtty} fuel: {cost}")
         if cost > ore_limit:
             break
         qtty_best = qtty
-    log_always(qtty_best)
+    log.always(qtty_best)
 
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

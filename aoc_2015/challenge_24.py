@@ -11,7 +11,7 @@ def solve(data, n):
     target = int(sum(data) / n)
     result = None
     for i in range(len(data)):
-        log_info(f"Length: {i}")
+        log.info(f"Length: {i}")
         for vals in itertools.combinations(data, i):
             if sum(vals) == target:
                 _result = 1
@@ -27,13 +27,13 @@ def main():
     args = parse_args()
     data = read_list_int(data_file_path_main(test=args.test), to_list=True)
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(data, 3)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(data, 4)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

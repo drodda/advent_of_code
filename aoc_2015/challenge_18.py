@@ -9,10 +9,10 @@ from common.utils import *
 
 def print_grid(grid, step=None):
     if step is not None:
-        log_always(f"Step {step}:")
+        log.always(f"Step {step}:")
     for row in grid:
-        log_always("".join(["#" if c else "." for c in row]))
-    log_always("")
+        log.always("".join(["#" if c else "." for c in row]))
+    log.always("")
 
 
 def iterate(grid, n=1, verbose=False, part2=False):
@@ -45,17 +45,17 @@ def main():
     grid = np.array([[c == "#" for c in line] for line in lines])
     verbose = args.verbose >= 3
 
-    log_always("Part 1")
+    log.always("Part 1")
     n = 4 if args.test else 100
     _grid = iterate(grid, n, verbose=verbose)
     result = np.sum(_grid)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 1")
+    log.always("Part 1")
     n = 5 if args.test else 100
     _grid = iterate(grid, n, verbose=verbose, part2=True)
     result = np.sum(_grid)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

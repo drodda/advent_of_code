@@ -120,7 +120,7 @@ def main():
             log.error("Unable to match any more sensors?")
             break
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     total_sensors = np.unique(
         np.concatenate(
             [coords for coords in known_sensors.values()],
@@ -128,9 +128,9 @@ def main():
         ),
         axis=0
     ).shape[0]
-    log_always(total_sensors)
+    log.always(total_sensors)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     distance_largest = 0
     _sensor_offsets = list(sensor_offsets.values())
 
@@ -138,7 +138,7 @@ def main():
         for coord_b in _sensor_offsets[i+1:]:
             distance = np.sum(np.abs(coord_b - coord_a))
             distance_largest = max(distance_largest, distance)
-    log_always(distance_largest)
+    log.always(distance_largest)
 
 
 if __name__ == "__main__":

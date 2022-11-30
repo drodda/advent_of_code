@@ -24,7 +24,7 @@ class VM:
             raise StopIteration
         if "," in operand0:
             operand0, operand1 = operand0.split(", ")
-        log_debug(f"{self.ip}: {opcode} {operand0} {operand1}: {self.regs}")
+        log.debug(f"{self.ip}: {opcode} {operand0} {operand1}: {self.regs}")
         if opcode == "hlf":
             self.regs[operand0] = int(self.regs[operand0] / 2)
         elif opcode == "tpl":
@@ -55,17 +55,17 @@ def main():
     args = parse_args()
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
 
-    log_always("Part 1")
+    log.always("Part 1")
     vm = VM(lines)
     vm.run()
     result = vm.regs["a" if args.test else "b"]
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     vm = VM(lines, reg_a=1)
     vm.run()
     result = vm.regs["a" if args.test else "b"]
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

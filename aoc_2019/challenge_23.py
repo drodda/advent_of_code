@@ -43,7 +43,7 @@ class NicVM(VMThread):
         except Empty:
             if not self.is_idle:
                 self.router.route_for_vm(self.vm_id, IDLE_SENTINEL)
-                log_debug(f"VM {self.vm_id} is going idle")
+                log.debug(f"VM {self.vm_id} is going idle")
             self.is_idle = True
             return -1
 
@@ -74,41 +74,41 @@ class VMRouter:
     def run(self):
         for vm in self.vms.values():
             vm.start()
-        log_debug("Waiting for result ...")
+        log.debug("Waiting for result ...")
         while True:
             vm_id, data = self.queue.get()
             if data is IDLE_SENTINEL:
                 if self.queue.empty():
                     # C heck if all VMs are idle
                     if all([vm.is_idle for vm in self.vms.values()]):
-                        log_info("VMs are idle")
+                        log.info("VMs are idle")
                         if self.last_x is not None:
                             if self.last_y_sent == self.last_y:
-                                log_always("Part 2")
-                                log_always(self.last_y)
+                                log.always("Part 2")
+                                log.always(self.last_y)
                                 break
                             self.last_y_sent = self.last_y
                             vm = self.vms[0]
-                            log_info(f"NAT: sending {self.last_x}, {self.last_y}")
+                            log.info(f"NAT: sending {self.last_x}, {self.last_y}")
                             vm.send_packet(self.last_x, self.last_y)
                         else:
-                            log_error("Error: NAT has no stored data")
+                            log.error("Error: NAT has no stored data")
             else:
-                log_debug(f"Routing {vm_id} => {data}")
+                log.debug(f"Routing {vm_id} => {data}")
                 addr, x, y = data
                 vm = self.vms.get(addr)
                 if vm is not None:
                     vm.send_packet(x, y)
                 elif addr == 255:
                     # Packet to NAT
-                    log_info(f"NAT: received {x}, {y}")
+                    log.info(f"NAT: received {x}, {y}")
                     if self.last_y is None:
-                        log_always("Part 1")
-                        log_always(y)
+                        log.always("Part 1")
+                        log.always(y)
                     self.last_x = x
                     self.last_y = y
                 else:
-                    log_error(f"route: bad address {addr}")
+                    log.error(f"route: bad address {addr}")
 
         # Stop all VMs
         self.stopped = True
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

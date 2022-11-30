@@ -68,12 +68,12 @@ def simulate(operations, n_cards, target, verbose=False):
         elif cmd == "deal with increment":
             deck = deal_increment(deck, val)
         else:
-            log_error(f"Invalid command: {cmd}")
+            log.error(f"Invalid command: {cmd}")
             return None
         if verbose:
-            log_debug(f"{i}: {cmd} {val}")
-            log_debug(" ".join(map(str, deck.tolist())))
-            log_debug("")
+            log.debug(f"{i}: {cmd} {val}")
+            log.debug(" ".join(map(str, deck.tolist())))
+            log.debug("")
     result = np_index(deck, target)
     return result
 
@@ -101,7 +101,7 @@ def solve(operations, n_cards, target, iterations=1):
         elif cmd == "deal with increment":
             increment *= mod_inv(val, n_cards)
         else:
-            log_error(f"Invalid command: {cmd}")
+            log.error(f"Invalid command: {cmd}")
             return None
         offset %= n_cards
         increment %= n_cards
@@ -122,15 +122,15 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
     operations = parse_operations(lines)
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     n_cards = N_CARDS_TEST if args.test else N_CARDS_1
     result = simulate(operations, n_cards, TARGET_1, verbose=verbose)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     n_cards = N_CARDS_TEST if args.test else N_CARDS_2
     result = solve(operations, n_cards, TARGET_2, iterations=REPEATS_2)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

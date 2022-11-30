@@ -57,11 +57,11 @@ def main():
         intersections = find_intersections(path1, path2)
         closest_distance = min([abs(x) + abs(y) for x, y in intersections.keys()])
         closest_steps = min(intersections.values())
-        log_always(f"Path {i}")
-        log_debug(f"  {path1}")
-        log_debug(f"  {path2}")
-        log_always(f"  Part 1 - Closest distance: {closest_distance}")
-        log_always(f"  Part 2 - Closest steps:    {closest_steps}")
+        log.always(f"Path {i}")
+        log.debug(f"  {path1}")
+        log.debug(f"  {path2}")
+        log.always(f"  Part 1 - Closest distance: {closest_distance}")
+        log.always(f"  Part 2 - Closest steps:    {closest_steps}")
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

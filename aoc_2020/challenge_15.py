@@ -28,7 +28,7 @@ def elf_game(initial, max_len):
 def run_all_elf_games(data, max_len):
     def run_elf_game(_data):
         result = elf_game(_data, max_len)
-        log_always(f"{_data} = {result}")
+        log.always(f"{_data} = {result}")
 
     # Run all test input
     for row in data:
@@ -41,10 +41,10 @@ def main():
     lines = read_lines(data_file)
     data = [list(map(int, line.split(","))) for line in lines]
 
-    log_always("Part 1")
+    log.always("Part 1")
     run_all_elf_games(data, LEN_PART1)
 
-    log_always("Part 2")
+    log.always("Part 2")
     run_all_elf_games(data, LEN_PART2)
 
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

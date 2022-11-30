@@ -56,10 +56,10 @@ def main():
         if args.verbose:
             visualise(i, data)
 
-    log_always("Part 1:")
-    log_always(i)
-    log_always("Part 2:")
-    log_always("There is no part 2!")
+    log.always("Part 1:")
+    log.always(i)
+    log.always("Part 2:")
+    log.always("There is no part 2!")
 
 
 if __name__ == "__main__":

@@ -97,7 +97,7 @@ def calculate_part_2(nodes, node):
         for _nodes_list in nodes_by_direction:
             i += 1
             node_destroyed = _nodes_list.pop()
-            log_verbose(f"{i}: {node_destroyed}\t{nodes_direction[node_destroyed]}")
+            log.verbose(f"{i}: {node_destroyed}\t{nodes_direction[node_destroyed]}")
             if i == 200:
                 result = node_destroyed[0] * 100 + node_destroyed[1]
         # Trim empty directions
@@ -108,14 +108,14 @@ def calculate_part_2(nodes, node):
 def main():
     args = parse_args()
     nodes = parse_data(read_lines(data_file_path_main(test=args.test)))
-    log_always("Part 1:")
+    log.always("Part 1:")
     node, count = calculate_part_1(nodes)
-    log_info(f"Best node: {node}")
+    log.info(f"Best node: {node}")
     if args.verbose:
         print()
         debug_print_data(nodes, node)
-    log_always(count)
-    log_always("Part 2:")
+    log.always(count)
+    log.always("Part 2:")
     result = calculate_part_2(nodes, node)
     print(result)
 

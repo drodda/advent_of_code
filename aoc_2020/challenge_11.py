@@ -39,7 +39,7 @@ def pad_data(data, pad=SYM_P):
 
 def debug_print_data(data, indent="> "):
     for row in data:
-        log_debug(indent + "".join(row))
+        log.debug(indent + "".join(row))
 
 
 def get_neighbours(data, i, j):
@@ -104,8 +104,8 @@ def mutate_until_stable(data, neighbour_func, occupied_thresh):
         if changed:
             break
         i += 1
-        log_debug()
-        log_debug(i)
+        log.debug()
+        log.debug(i)
         debug_print_data(data)
 
     return data, i
@@ -121,13 +121,13 @@ def main():
 
     debug_print_data(data)
 
-    log_always("Part 1")
+    log.always("Part 1")
     data_final, i = mutate_until_stable(data, get_neighbours, 4)
-    log_always(count_seats(data_final, SYM_O))
+    log.always(count_seats(data_final, SYM_O))
 
-    log_always("Part 2")
+    log.always("Part 2")
     data_final, i = mutate_until_stable(data, get_visible, 5)
-    log_always(count_seats(data_final, SYM_O))
+    log.always(count_seats(data_final, SYM_O))
 
 
 if __name__ == "__main__":
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

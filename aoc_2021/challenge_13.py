@@ -50,9 +50,9 @@ def main():
         val = int(val)
         grid = fold(grid, axis, val)
         if i == 0:
-            log_always("Part 1:")
-            log_always(np.sum(grid))
-    log_always("Part 2:")
+            log.always("Part 1:")
+            log.always(np.sum(grid))
+    log.always("Part 2:")
     visualise(grid)
 
 

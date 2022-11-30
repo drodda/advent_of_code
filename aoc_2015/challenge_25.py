@@ -27,9 +27,9 @@ def main():
     args = parse_args()
     line = open(data_file_path_main(test=args.test)).read().strip()
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(line)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

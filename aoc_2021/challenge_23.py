@@ -120,12 +120,12 @@ def main():
     args = parse_args()
     data = read_lines(data_file_path_main(test=args.test), to_list=True)
 
-    log_always("Part 1:")
-    log_always(solve(data))
+    log.always("Part 1:")
+    log.always(solve(data))
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     data = data[:3] + ["  #D#C#B#A#", "  #D#B#A#C#"] + data[3:]
-    log_always(solve(data))
+    log.always(solve(data))
 
 
 if __name__ == "__main__":

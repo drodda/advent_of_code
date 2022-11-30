@@ -15,7 +15,7 @@ TRANSPARENT = 2
 def main():
     args = parse_args()
     data_raw = list(map(int, open(data_file_path_main(test=args.test)).read().strip()))
-    log_verbose(data_raw)
+    log.verbose(data_raw)
 
     width = 3 if args.test else 25
     height = 2 if args.test else 6
@@ -25,7 +25,7 @@ def main():
     image = np.full((height, width), TRANSPARENT)
     for _layer in np.reshape(data_raw, (-1, width*height)):
         layer = np.reshape(_layer, (height, width))
-        log_verbose(layer)
+        log.verbose(layer)
         # Part 1: Count zeros
         layer_zeros = np.sum(layer == 0)
         if min_layer_zeros is None or layer_zeros < min_layer_zeros:
@@ -34,15 +34,15 @@ def main():
         # Part 2: Update image from layer where image is transparent
         indices = np.where(image == TRANSPARENT)
         image[indices] = layer[indices]
-    log_always("Part 1:")
-    log_always(min_layer_score)
-    log_always("Part 2:")
-    # log_always(image)
+    log.always("Part 1:")
+    log.always(min_layer_score)
+    log.always("Part 2:")
+    # log.always(image)
     for row in image:
         line = ""
         for pixel in row:
             line += "\u25A0" if pixel == WHITE else " "
-        log_always(line)
+        log.always(line)
 
 
 if __name__ == "__main__":

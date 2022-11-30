@@ -21,18 +21,18 @@ def main():
 
     time_now = int(data[0])
     times_full = [int(i) if i.isnumeric() else i for i in data[1].split(",")]
-    log_verbose(times_full)
+    log.verbose(times_full)
     times = [i for i in times_full if i != "x"]
 
-    log_always("Part 1")
+    log.always("Part 1")
     times_next = [next_time(time_now, t) for t in times]
     time_next = min(times_next)
     i = times_next.index(time_next)
-    log_debug(f"Now: {time_now}, next: {time_next} ({i}: {times[i]})")
+    log.debug(f"Now: {time_now}, next: {time_next} ({i}: {times[i]})")
     part1_result = times[i] * (time_next - time_now)
-    log_always(part1_result)
+    log.always(part1_result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     # Accumulator
     time_next = 0
     # LCM of all times encountered times so far
@@ -49,9 +49,9 @@ def main():
                 for _i in range(i+1):
                     _t = times_full[_i]
                     if _t != "x":
-                        log_verbose(f"  {_i}: {time_next} % {_t} == {time_next % _t}  ({(time_next * -1) % _t})")
-                log_verbose()
-    log_always(time_next)
+                        log.verbose(f"  {_i}: {time_next} % {_t} == {time_next % _t}  ({(time_next * -1) % _t})")
+                log.verbose()
+    log.always(time_next)
 
 
 if __name__ == "__main__":
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

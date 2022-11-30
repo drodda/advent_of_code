@@ -32,8 +32,8 @@ def play_round(cards1, cards2):
 
 def play_regular(card1, card2, cards1, cards2):
     """ Play a regular game and allocate cards """
-    log_verbose(f"Player 1: {card1} {cards1}")
-    log_verbose(f"Player 1: {card2} {cards2}")
+    log.verbose(f"Player 1: {card1} {cards1}")
+    log.verbose(f"Player 1: {card2} {cards2}")
     allocate_cards(card1, card2, cards1, cards2, card1 > card2)
 
 
@@ -49,11 +49,11 @@ def allocate_cards(card1, card2, cards1, cards2, player_1_win):
 
 def print_result(cards1, cards2, player_1_win):
     winner = "1" if player_1_win else "2"
-    log_debug(f"Player 1: {cards1}")
-    log_debug(f"Player 2: {cards2}")
-    log_always(f"Winner: {winner}")
-    log_always(f"Player 1: {calculate_score(cards1)}")
-    log_always(f"Player 2: {calculate_score(cards2)}")
+    log.debug(f"Player 1: {cards1}")
+    log.debug(f"Player 2: {cards2}")
+    log.always(f"Winner: {winner}")
+    log.always(f"Player 1: {calculate_score(cards1)}")
+    log.always(f"Player 2: {calculate_score(cards2)}")
 
 
 def calculate_score(cards):
@@ -101,7 +101,7 @@ def play_round_recursive(cards1, cards2, history1, history2, g=1, r=1):
     """ Play a single round of a recursive game. Cards are modified in place
         Raises GameOver if this is an early end of game
     """
-    log_debug(f"Game {g} Round {r}: {cards1} vs {cards2}")
+    log.debug(f"Game {g} Round {r}: {cards1} vs {cards2}")
     if cards1 in history1 or cards2 in history2:
         raise GameOver(1, cards1, cards2)
     history1.append(copy.copy(cards1))
@@ -113,10 +113,10 @@ def play_round_recursive(cards1, cards2, history1, history2, g=1, r=1):
         _cards1 = cards1[:card1]
         _cards2 = cards2[:card2]
         # Play the game
-        log_verbose(f"Playing a game {g+1} for cards {card1} {cards1}, {card2} {cards2}")
+        log.verbose(f"Playing a game {g+1} for cards {card1} {cards1}, {card2} {cards2}")
         _, _, player_1_win = play_game_recursive(_cards1, _cards2, g+1)
         winner = "1" if player_1_win else "2"
-        log_verbose(f"Winner of game {g+1} for cards {card1} {cards1}, {card2} {cards2}: {winner}")
+        log.verbose(f"Winner of game {g+1} for cards {card1} {cards1}, {card2} {cards2}: {winner}")
         allocate_cards(card1, card2, cards1, cards2, player_1_win)
     else:
         # Not recursive round: play a regular round
@@ -133,11 +133,11 @@ def main():
     cards1 = list(map(int, cards1_str[1:]))
     cards2 = list(map(int, cards2_str[1:]))
 
-    log_always("Part 1")
+    log.always("Part 1")
     _cards1, _cards2, _player_1_win = play_game(cards1, cards2)
     print_result(_cards1, _cards2, _player_1_win)
 
-    log_always("Part 2")
+    log.always("Part 2")
     _cards1, _cards2, _player_1_win = play_game_recursive(cards1, cards2)
     print_result(_cards1, _cards2, _player_1_win)
 
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

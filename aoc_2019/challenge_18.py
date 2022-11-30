@@ -155,8 +155,8 @@ def simulate_part2(world):
 
 def print_world(world):
     for y in range(len(world)):
-        log_debug("".join(world[y]))
-    log_debug("")
+        log.debug("".join(world[y]))
+    log.debug("")
 
 
 def main():
@@ -166,22 +166,22 @@ def main():
     world = np.array([[c for c in s] for s in data])
     print_world(world)
 
-    log_always("Part 1")
+    log.always("Part 1")
     cost, keys = simulate_part1(world)
     if cost is not None:
-        log_always(cost)
-        log_always(keys)
+        log.always(cost)
+        log.always(keys)
     else:
-        log_always("No Solution")
-    log_always("")
+        log.always("No Solution")
+    log.always("")
 
-    log_always("Part 2")
+    log.always("Part 2")
     cost, keys = simulate_part2(world)
     if cost is not None:
-        log_always(cost)
-        log_always(keys)
+        log.always(cost)
+        log.always(keys)
     else:
-        log_always("No Solution")
+        log.always("No Solution")
 
 
 if __name__ == "__main__":
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -178,7 +178,7 @@ def solve_part2(data, world):
     vm = VM(data)
     vm.mem_put(0, 2)
     for line in [tokens, token_a, token_b, token_c]:
-        log_verbose(line)
+        log.verbose(line)
         for c in line:
             vm.input.put(ord(c))
         vm.input.put(ord("\n"))
@@ -191,13 +191,13 @@ def solve_part2(data, world):
 
 def print_world(world):
     for row in world:
-        log_info("".join(row))
+        log.info("".join(row))
 
 
 def main():
     args = parse_args()
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
-    log_always("Part 1")
+    log.always("Part 1")
     vm = VM(data)
     vm.run()
     world_txt = "".join([chr(c) for c in vm.output.queue]).splitlines()
@@ -205,12 +205,12 @@ def main():
     if args.verbose:
         print_world(world)
         # for line in world:
-        #     log_info(line)
+        #     log.info(line)
     result = solve_part1(world)
-    log_always(result)
-    log_always("Part 2")
+    log.always(result)
+    log.always("Part 2")
     result = solve_part2(data, world)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

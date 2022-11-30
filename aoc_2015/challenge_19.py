@@ -70,16 +70,16 @@ def main():
     replacements = parse_replacements(replacements_lines)
     molecule = molecule_lines[0]
 
-    log_always("Part 1")
+    log.always("Part 1")
     mutations = mutate(molecule, replacements)
-    log_verbose(mutations)
+    log.verbose(mutations)
     result = len(mutations)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     reversed_replacements = reverse_replacements(replacements)
     result = reverse_mutate(molecule, reversed_replacements)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -58,19 +58,19 @@ def main():
     password = open(data_file_path_main(test=args.test)).read().strip()
     plst = list(map(ord, password))
 
-    log_always("Part 1")
+    log.always("Part 1")
     for _plst in password_gen(plst):
-        log_debug(f"Evaluating: {plst_to_str(_plst)}")
+        log.debug(f"Evaluating: {plst_to_str(_plst)}")
         if validate(_plst):
             break
-    log_always(plst_to_str(_plst))
+    log.always(plst_to_str(_plst))
 
-    log_always("Part 2")
+    log.always("Part 2")
     for _plst in password_gen(_plst):
-        log_debug(f"Evaluating: {plst_to_str(_plst)}")
+        log.debug(f"Evaluating: {plst_to_str(_plst)}")
         if validate(_plst):
             break
-    log_always(plst_to_str(_plst))
+    log.always(plst_to_str(_plst))
 
 
 if __name__ == "__main__":
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

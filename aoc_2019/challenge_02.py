@@ -40,19 +40,19 @@ def main():
     # Patch program
     patch_mem_values = {} if args.test else {1: 12, 2: 2}
 
-    log_always("Part 1")
+    log.always("Part 1")
     vm = VM(patch_memory(data, patch_mem_values))
     vm.run()
-    log_always(vm.mem_load(0))
+    log.always(vm.mem_load(0))
 
     if not args.test:
-        log_always("Part 2")
+        log.always("Part 2")
         try:
             x, y = find_vm_solution(data, 19690720)
             result = 100 * x + y
-            log_always(f"{x}, {y} = {result}")
+            log.always(f"{x}, {y} = {result}")
         except NoSolution as e:
-            log_always(e)
+            log.always(e)
 
 
 if __name__ == "__main__":
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

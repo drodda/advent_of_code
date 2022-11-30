@@ -126,10 +126,10 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
     tokens_list = [tokenise(line) for line in lines]
 
-    log_always("Part 1:")
-    log_always(add_tokens(tokens_list))
+    log.always("Part 1:")
+    log.always(add_tokens(tokens_list))
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     result_best = None
     for i, line_i in enumerate(tokens_list):
         for j, line_j in enumerate(tokens_list):
@@ -140,7 +140,7 @@ def main():
                 result = add_tokens([line_j, line_i])
                 if result_best is None or result > result_best:
                     result_best = result
-    log_always(result_best)
+    log.always(result_best)
 
 
 if __name__ == "__main__":

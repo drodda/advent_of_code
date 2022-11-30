@@ -133,13 +133,13 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     data = {k.lower(): int(v) for k, v in [line.split(": ") for line in lines]}
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(data)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(data, hard=True)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

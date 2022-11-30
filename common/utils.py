@@ -13,12 +13,11 @@ except ImportError:
 
 
 # Get logger that will be used by all clients of this module, and add extra log levels and methods
-log = logging.getLogger(sys.argv[0])
+log = logging.getLogger("main")
 
 
 __all__ = [
-    "SCRIPT_BASE", "data_file_path", "data_file_path_main", "parse_args", "trace",
-    "log", "log_verbose", "log_never", "log_debug", "log_info", "log_warning", "log_always", "log_error",
+    "SCRIPT_BASE", "data_file_path", "data_file_path_main", "parse_args", "trace", "log",
     "ltrim", "rtrim", "str_reversed",
     "read_lines", "read_multilines", "read_list_int", "read_csv_int", "read_csv_int_multiline",
     "grouper",
@@ -65,21 +64,13 @@ trace = pdb.set_trace
 VERBOSE = logging.DEBUG - 1
 logging.addLevelName(VERBOSE, "VERBOSE")
 log.verbose = lambda msg, *args, **kwargs: log.log(VERBOSE, msg, *args, **kwargs)
-ALWAYS = logging.CRITICAL
+ALWAYS = logging.CRITICAL + 10
 logging.addLevelName(ALWAYS, "ALWAYS")
 log.always = log.critical
 NEVER = logging.NOTSET - 1
 logging.addLevelName(NEVER, "NEVER")
 log.never = lambda msg, *args, **kwargs: log.log(NEVER, msg, *args, **kwargs)
 
-# Export log functions
-log_verbose = log.verbose
-log_debug = log.debug
-log_info = log.info
-log_always = log.always
-log_warning = log.warning
-log_error = log.error
-log_never = log.never
 
 # Suppress verbose logging from libraries
 logging.getLogger('asyncio').setLevel(logging.WARNING)

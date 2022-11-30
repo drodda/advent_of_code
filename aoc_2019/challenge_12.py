@@ -53,15 +53,15 @@ def main():
         position = list(map(int, groups))
         positions.append(position)
 
-    log_always("Part 1")
+    log.always("Part 1")
     rounds = 100 if args.test else 1000
     _positions, _velocities = simulate(positions, rounds)
-    log_always(calculate_energy(_positions, _velocities))
+    log.always(calculate_energy(_positions, _velocities))
 
-    log_always("Part 2")
+    log.always("Part 2")
     repeat = [simulate_until_repeat([position[i] for position in positions]) for i in range(3)]
     result = np.lcm.reduce(repeat)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

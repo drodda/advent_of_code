@@ -49,10 +49,10 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     data = [list(map(int, line)) for line in lines]
     data_array = np.array(data)
-    log_always("Part 1:")
-    log_always(calculate_part_1(data_array))
-    log_always("Part 2:")
-    log_always(calculate_part_2(data_array))
+    log.always("Part 1:")
+    log.always(calculate_part_1(data_array))
+    log.always("Part 2:")
+    log.always(calculate_part_2(data_array))
 
 
 if __name__ == "__main__":

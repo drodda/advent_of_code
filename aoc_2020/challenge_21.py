@@ -50,12 +50,12 @@ def main():
     total = 0
     for ingredient in ingredients_without_allergens:
         count = ingredients_total.count(ingredient)
-        log_debug(f"{ingredient}: {count}")
+        log.debug(f"{ingredient}: {count}")
         total += count
-    log_debug()
-    log_always("Part 1")
-    log_always(total)
-    log_always()
+    log.debug()
+    log.always("Part 1")
+    log.always(total)
+    log.always()
 
     # Find the only possible combination of ingredients for allergens
     while allergens_possible:
@@ -64,7 +64,7 @@ def main():
                 # Found an allergen with only 1 possible ingredient
                 # Get the only item
                 ingredient = ingredients.pop()
-                log_debug(f"{allergen} = {ingredient}")
+                log.debug(f"{allergen} = {ingredient}")
                 allergens[allergen] = ingredient
 
                 # Remove from all other allergens
@@ -75,12 +75,12 @@ def main():
                 break
         else:
             raise RuntimeError(f"Could not find an allergen to remove? {allergens_possible}")
-    log_debug()
+    log.debug()
 
     ingredients_sorted = collections.OrderedDict(sorted(allergens.items()))
-    log_always("Part 2")
-    log_always(",".join(ingredients_sorted.values()))
-    log_always()
+    log.always("Part 2")
+    log.always(",".join(ingredients_sorted.values()))
+    log.always()
 
 
 if __name__ == "__main__":
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

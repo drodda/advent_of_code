@@ -37,25 +37,25 @@ def main():
     args = parse_args()
     lines = read_lines(data_file_path_main(test=args.test))
     data = np.array([list(map(int, line)) for line in lines])
-    log_verbose(data)
+    log.verbose(data)
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     flash_count = 0
     _data = data.copy()
     for i in range(100):
         flash_count += step(_data)
-        log_verbose(f"{i}:")
-        log_verbose(_data)
-    log_always(flash_count)
+        log.verbose(f"{i}:")
+        log.verbose(_data)
+    log.always(flash_count)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     # Loop until all elements flash (data == 0)
     _data = data.copy()
     i = 0
     while not np.all(_data == 0):
         i += 1
         step(_data)
-    log_always(i)
+    log.always(i)
 
 
 if __name__ == "__main__":

@@ -98,13 +98,13 @@ def main():
         for i in range(0, len(instructions), BLOCK_SIZE)
     ]
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     result = solve(block_values, largest=True)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     result = solve(block_values, largest=False)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

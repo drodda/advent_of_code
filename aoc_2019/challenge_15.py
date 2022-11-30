@@ -143,13 +143,13 @@ def main():
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
     visualiser = Visualiser() if args.verbose else None
 
-    log_always("Part 1")
+    log.always("Part 1")
     paths, walls, oxygen_position, oxygen_vm = map_world(data, visualiser)
     if oxygen_position is not None:
-        log_always(paths[oxygen_position])
-        log_always("Part 2")
+        log.always(paths[oxygen_position])
+        log.always("Part 2")
         oxygen_paths = flood_oxygen(oxygen_position, oxygen_vm, paths, walls, visualiser)
-        log_always(max(oxygen_paths.values()))
+        log.always(max(oxygen_paths.values()))
 
     if visualiser is not None:
         visualiser.check_quit(5)
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

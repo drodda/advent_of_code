@@ -18,7 +18,7 @@ def parse_input(lines):
             result[dest1][dest2] = dist
             result[dest2][dest1] = dist
         else:
-            log_error(f"Bad line: {line}")
+            log.error(f"Bad line: {line}")
     return result
 
 
@@ -34,12 +34,12 @@ def all_paths(connections):
     while path_heads:
         cost, path = path_heads.pop()
         if set(path) == all_destinations:
-            log_verbose(f"Solution found: {path} cost {cost}")
+            log.verbose(f"Solution found: {path} cost {cost}")
             yield cost, path
         if path in explored:
             continue
         explored.add(path)
-        log_verbose(f"Searching: {path} cost {cost}")
+        log.verbose(f"Searching: {path} cost {cost}")
         node = path[-1]
         # Explore all connections from node
         for _node, _cost in connections[node].items():
@@ -54,14 +54,14 @@ def main():
 
     paths = all_paths(connections)
 
-    log_always("Part 1")
+    log.always("Part 1")
     cost, path = next(paths)
-    log_always(cost)
+    log.always(cost)
 
-    log_always("Part 2")
+    log.always("Part 2")
     # Drain paths, keep last
     *_, (cost, path) = paths
-    log_always(cost)
+    log.always(cost)
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -55,15 +55,15 @@ def main():
         for x, c in enumerate(line):
             image_data[(x, y)] = True if c == "#" else False
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     for i in range(2):
         image_data = image_enhance(image_data, image_enhancement_algorithm)
-    log_always(sum(image_data.values()))
+    log.always(sum(image_data.values()))
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     for i in range(48):
         image_data = image_enhance(image_data, image_enhancement_algorithm)
-    log_always(sum(image_data.values()))
+    log.always(sum(image_data.values()))
 
 
 if __name__ == "__main__":

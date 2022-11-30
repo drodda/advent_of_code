@@ -74,10 +74,10 @@ def main():
 
     # numbers = map(int, next(data).split(","))
     boards = [create_board(item) for item in data]
-    log_always("Part 1:")
-    log_always(calculate_part_1(boards, numbers))
-    log_always("Part 2:")
-    log_always(calculate_part_2(boards, numbers))
+    log.always("Part 1:")
+    log.always(calculate_part_1(boards, numbers))
+    log.always("Part 2:")
+    log.always(calculate_part_2(boards, numbers))
 
 
 if __name__ == "__main__":

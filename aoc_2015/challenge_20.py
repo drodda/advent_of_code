@@ -36,11 +36,11 @@ def main():
             result_2 = i
         i += 1
 
-    log_always("Part 1")
-    log_always(result_1)
+    log.always("Part 1")
+    log.always(result_1)
 
-    log_always("Part 2")
-    log_always(result_2)
+    log.always("Part 2")
+    log.always(result_2)
 
 
 if __name__ == "__main__":
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

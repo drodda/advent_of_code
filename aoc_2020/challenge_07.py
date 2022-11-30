@@ -19,7 +19,7 @@ def parse_input(filename):
         else:
             for item in bag_contents:
                 n, col = item.split(" ", 1)
-                log_debug(f"  {n} = {col}")
+                log.debug(f"  {n} = {col}")
                 bag_list.append((int(n), col))
         bag_dict[bag_col] = bag_list
     return bag_dict
@@ -49,20 +49,20 @@ def main():
     args = parse_args()
     bag_dict = parse_input(data_file_path_main(test=args.test))
 
-    log_always("Part 1:")
+    log.always("Part 1:")
 
     count = 0
     for col in bag_dict.keys():
         if bag_can_contain(bag_dict, col):
-            log_debug(col)
+            log.debug(col)
             count += 1
 
-    log_always(count)
+    log.always(count)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     if args.test:
         bag_dict = parse_input(data_file_path("test", "b"))
-    log_always(bag_contents_count(bag_dict, "shiny gold"))
+    log.always(bag_contents_count(bag_dict, "shiny gold"))
 
 
 if __name__ == "__main__":
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

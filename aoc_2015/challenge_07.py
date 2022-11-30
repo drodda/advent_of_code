@@ -58,7 +58,7 @@ def run(instructions, values=None):
     depends = collections.defaultdict(set)
     for instruction in instructions:
         if instruction.output in values:
-            log_debug(f"Skipping: {instruction}")
+            log.debug(f"Skipping: {instruction}")
             continue
         if instruction.satisfied(values):
             satisfied.add(instruction)
@@ -70,13 +70,13 @@ def run(instructions, values=None):
     # Solve
     while satisfied:
         instruction = satisfied.pop()
-        log_debug(f"Satisfiable: {instruction}")
+        log.debug(f"Satisfiable: {instruction}")
         k = instruction.output
         values[k] = instruction.solve(values)
-        log_debug(f"Values: {values}")
+        log.debug(f"Values: {values}")
         for _instruction in depends[k]:
             if _instruction in unsatisfied and _instruction.satisfied(values):
-                log_debug(f"\tCan now be solved: {_instruction}")
+                log.debug(f"\tCan now be solved: {_instruction}")
                 unsatisfied.remove(_instruction)
                 satisfied.add(_instruction)
 
@@ -101,11 +101,11 @@ def main():
 
     result_1, result_2 = solve(lines)
 
-    log_always("Part 1")
-    log_always(result_1)
+    log.always("Part 1")
+    log.always(result_1)
 
-    log_always("Part 2")
-    log_always(result_2)
+    log.always("Part 2")
+    log.always(result_2)
 
 
 if __name__ == "__main__":
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

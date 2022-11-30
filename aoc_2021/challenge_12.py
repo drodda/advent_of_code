@@ -40,15 +40,15 @@ def main():
         node_a, node_b = line.split("-")
         node_map[node_a].add(node_b)
         node_map[node_b].add(node_a)
-    log_verbose(node_map)
+    log.verbose(node_map)
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     paths = list(find_paths(node_map))
-    log_always(len(paths))
+    log.always(len(paths))
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     paths = list(find_paths(node_map, extra_stops=1))
-    log_always(len(paths))
+    log.always(len(paths))
 
 
 if __name__ == "__main__":

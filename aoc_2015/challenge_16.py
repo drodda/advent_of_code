@@ -33,7 +33,7 @@ def parse_input(lines):
             vals = {k: int(v) for k, v in [val.split(": ") for val in vals.split(", ")]}
             result[n] = vals
         else:
-            log_error(f"Bad line: {line}")
+            log.error(f"Bad line: {line}")
     return result
 
 
@@ -60,7 +60,7 @@ def match_part2(vals):
 def solve(data, match_fn):
     for n, vals in data.items():
         if match_fn(vals):
-            log_debug(f"Match: {vals} == {RESULT}")
+            log.debug(f"Match: {vals} == {RESULT}")
             return n
     return None
 
@@ -70,13 +70,13 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
     data = parse_input(lines)
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(data, match_part1)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(data, match_part2)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

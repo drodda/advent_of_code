@@ -26,7 +26,7 @@ class FerryA:
         elif cmd == "F":
             self.x += self.dx * val
             self.y += self.dy * val
-        self.__log_always()
+        self.__log.always()
 
     def move(self, cmd, val):
         """ Move ferry (x, y) """
@@ -49,8 +49,8 @@ class FerryA:
         """ Calculate Manhattan distance """
         return abs(self.x) + abs(self.y)
 
-    def __log_always(self):
-        log_verbose(f"({self.__class__.__name__}: {self.x}, {self.y}), ({self.dx}, {self.dy})")
+    def __log.always(self):
+        log.verbose(f"({self.__class__.__name__}: {self.x}, {self.y}), ({self.dx}, {self.dy})")
 
 
 class FerryB(FerryA):
@@ -87,14 +87,14 @@ def main():
     data = read_lines(data_file, to_list=True)
 
     for line in data:
-        log_verbose(f"{line}")
+        log.verbose(f"{line}")
         ferry_a.step(line)
         ferry_b.step(line)
 
-    log_always("Part 1")
-    log_always(ferry_a.get_distance())
-    log_always("Part 2")
-    log_always(ferry_b.get_distance())
+    log.always("Part 1")
+    log.always(ferry_a.get_distance())
+    log.always("Part 2")
+    log.always(ferry_b.get_distance())
 
 
 if __name__ == "__main__":
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -41,12 +41,12 @@ def main():
             count += 1
             max_y = max([coord[1] for coord in coords])
             best_y = max(best_y, max_y)
-            log_info(f"{vx}, {vy} = {coords}, {max_y}")
+            log.info(f"{vx}, {vy} = {coords}, {max_y}")
             # break
-    log_always("Part 1:")
-    log_always(best_y)
-    log_always("Part 2:")
-    log_always(count)
+    log.always("Part 1:")
+    log.always(best_y)
+    log.always("Part 2:")
+    log.always(count)
 
 
 if __name__ == "__main__":

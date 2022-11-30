@@ -60,13 +60,13 @@ def main():
     # data_file = "data/challenge_19b_test.txt"
     lines_rules, lines_test = read_multilines(data_file)
 
-    log_always("Part 1")
+    log.always("Part 1")
     rules = parse_rules(lines_rules)
-    log_always(test_rules(rules, lines_test))
+    log.always(test_rules(rules, lines_test))
 
-    log_always("Part 2")
+    log.always("Part 2")
     rules = parse_rules(lines_rules + RECURSIVE_RULES)
-    log_always(test_rules(rules, lines_test))
+    log.always(test_rules(rules, lines_test))
 
 
 if __name__ == "__main__":
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

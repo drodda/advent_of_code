@@ -16,7 +16,7 @@ def calculate_part_1(data):
             depth += value
         elif direction == "up":
             depth -= value
-    log_info(f"Distance: {dist}, Depth: {depth}")
+    log.info(f"Distance: {dist}, Depth: {depth}")
     return dist * depth
 
 
@@ -32,7 +32,7 @@ def calculate_part_2(data):
             aim += value
         elif direction == "up":
             aim -= value
-    log_info(f"Distance: {dist}, Depth: {depth}")
+    log.info(f"Distance: {dist}, Depth: {depth}")
     return dist * depth
 
 
@@ -41,10 +41,10 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
     data = [line.split() for line in lines]
     data = [(line[0], int(line[1])) for line in data]
-    log_always("Part 1:")
-    log_always(calculate_part_1(data))
-    log_always("Part 2:")
-    log_always(calculate_part_2(data))
+    log.always("Part 1:")
+    log.always(calculate_part_1(data))
+    log.always("Part 2:")
+    log.always(calculate_part_2(data))
 
 
 if __name__ == "__main__":

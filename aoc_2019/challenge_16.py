@@ -27,7 +27,7 @@ def solve_part1(data):
             pattern = np.roll(pattern, -1)[:_len]
             _data[i] = abs(np.sum(data * pattern)) % 10
         data = _data
-        log_verbose(f"{r} = {_data}")
+        log.verbose(f"{r} = {_data}")
     result = to_str(data[:8])
     return result
 
@@ -47,18 +47,18 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test))
 
     for line in lines:
-        log_info(line)
+        log.info(line)
         data = list(map(int, line))
 
-        log_always("Part 1")
+        log.always("Part 1")
         result = solve_part1(data)
-        log_always(result)
+        log.always(result)
 
-        log_always("Part 2")
+        log.always("Part 2")
         result = solve_part2(data)
-        log_always(result)
+        log.always(result)
 
-        log_always("")
+        log.always("")
 
 
 if __name__ == "__main__":
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

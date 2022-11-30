@@ -109,14 +109,14 @@ def main():
     data_raw = [list(line) for line in read_lines(data_file_path_main(test=args.test))]
     world = np.array(data_raw) == "#"
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     result = solve_part1(world, verbose=verbose)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     iterations = 10 if args.test else 200
     result = solve_part2(world, iterations, verbose=verbose)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

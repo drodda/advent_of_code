@@ -34,12 +34,12 @@ def main():
     args = parse_args()
     data = read_csv_int(data_file_path_main(test=args.test))
     fish_count = parse_data(data, SPAWN_FIRST)
-    log_always("Part 1:")
+    log.always("Part 1:")
     fish_count = run_sim(fish_count, 80)
-    log_always(sum(fish_count))
-    log_always("Part 2:")
+    log.always(sum(fish_count))
+    log.always("Part 2:")
     fish_count = run_sim(fish_count, 256 - 80)
-    log_always(sum(fish_count))
+    log.always(sum(fish_count))
 
 
 if __name__ == "__main__":

@@ -43,7 +43,7 @@ def solve(data, program):
         result = output[-1]
         output = output[:-1]
     for line in "".join(map(chr, output)).splitlines():
-        log_info(f"> {line}")
+        log.info(f"> {line}")
     return result
 
 
@@ -52,13 +52,13 @@ def main():
     lines = read_lines(data_file_path_main(test=args.test), to_list=True)
     data = list(map(int, lines[0].split(",")))
 
-    log_always("Part 1")
+    log.always("Part 1")
     result = solve(data, PROGRAM_1)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2")
+    log.always("Part 2")
     result = solve(data, PROGRAM_2)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

@@ -74,13 +74,13 @@ def main():
     pos_1 = int(data_raw[0].split(" ")[-1])
     pos_2 = int(data_raw[1].split(" ")[-1])
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     result = simulate_deterministic(pos_1, pos_2)
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     result = simulate_quantum(pos_1, pos_2)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":

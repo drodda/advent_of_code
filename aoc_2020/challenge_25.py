@@ -36,23 +36,23 @@ def main():
     card_pub = int(lines[0])
     door_pub = int(lines[1])
 
-    log_always("Part 1")
-    log_verbose(gen_pubkey(DEFAULT_SN, 8))
-    log_verbose(gen_pubkey(DEFAULT_SN, 11))
+    log.always("Part 1")
+    log.verbose(gen_pubkey(DEFAULT_SN, 8))
+    log.verbose(gen_pubkey(DEFAULT_SN, 11))
 
     # Brute force loop_size
     card_loop_size = brute_force_pubkey(DEFAULT_SN, card_pub)
     door_loop_size = brute_force_pubkey(DEFAULT_SN, door_pub)
-    log_debug(f"Card loop size: {card_loop_size}")
-    log_debug(f"Door loop size: {door_loop_size}")
+    log.debug(f"Card loop size: {card_loop_size}")
+    log.debug(f"Door loop size: {door_loop_size}")
 
     # Use loop size to generate encryption value
     card_val = gen_pubkey(door_pub, card_loop_size)
     door_val = gen_pubkey(card_pub, door_loop_size)
-    log_always(f"Result: {card_val}  {door_val}")
+    log.always(f"Result: {card_val}  {door_val}")
 
-    log_always("Part 2")
-    log_always("There is no part 2")
+    log.always("Part 2")
+    log.always("There is no part 2")
 
 
 if __name__ == "__main__":
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

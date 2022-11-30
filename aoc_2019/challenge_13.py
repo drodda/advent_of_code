@@ -61,7 +61,7 @@ def parse_output(vm):
             else:
                 screen_data[(x, y)] = val
     except queue.Empty:
-        log_error("VM output ended unexpectedly")
+        log.error("VM output ended unexpectedly")
     return screen_data, score, ball_x, ball_y, paddle_x
 
 
@@ -89,7 +89,7 @@ def simulate_part_2(data, x_max, y_max, show_visualisation=False):
         if show_visualisation:
             # Quit if the pygame window is closed
             if visualiser.check_quit():
-                log_always("Exiting because window has quit")
+                log.always("Exiting because window has quit")
                 break
         _quit = False
         # Run until VM asks for input
@@ -132,14 +132,14 @@ def main():
     data = read_csv_int(data_file_path_main(test=False), to_list=True)
 
     # Part 1: Run with no input, read screen data
-    log_always("Part 1")
+    log.always("Part 1")
     x_max, y_max, result = simulate_part_1(data)
-    log_always(result)
+    log.always(result)
 
     # Part 2: Run simulation
-    log_always("Part 2")
+    log.always("Part 2")
     result = simulate_part_2(data, x_max, y_max, show_visualisation=args.verbose)
-    log_always(result)
+    log.always(result)
 
 
 if __name__ == "__main__":
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        log_always("Killed")
+        log.always("Killed")
     except Exception:
         traceback.print_exc()
         sys.exit(-1)

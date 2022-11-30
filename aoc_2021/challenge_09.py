@@ -67,20 +67,20 @@ def main():
     data_raw = read_lines(data_file_path_main(test=args.test))
     data = np.array([list(map(int, list(line))) for line in data_raw])
 
-    log_always("Part 1:")
+    log.always("Part 1:")
     low_points = find_low_points(data)
     result = len(low_points) + sum([data[x, y] for x, y in low_points])
-    log_always(result)
+    log.always(result)
 
-    log_always("Part 2:")
+    log.always("Part 2:")
     basin_sizes = [0] * len(low_points)
     for i, (x, y) in enumerate(low_points):
         basin_size = calculate_basin_size(data, (x, y))
         basin_sizes[i] = basin_size
-        log_info(f"{x},{y}: {basin_size}")
+        log.info(f"{x},{y}: {basin_size}")
 
     basin_sizes = sorted(basin_sizes, reverse=True)
-    log_always(np.product(basin_sizes[:3]))
+    log.always(np.product(basin_sizes[:3]))
 
 
 if __name__ == "__main__":
