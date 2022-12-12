@@ -5,11 +5,11 @@ import traceback
 from common.utils import *
 
 
-def solve(data, start, end):
-    """ Find the shortest path between start and end of data, ascending at most 1 each time """
+def solve(data, starts, end):
+    """ Find the shortest path between starts and end of data, ascending at most 1 each time """
     # Use Dijkstra search
     explored = set()
-    q = HeapQ([(0, start)])
+    q = HeapQ([(0, start) for start in starts])
     while q:
         cost, pos = q.pop()
         if pos in explored:
@@ -44,17 +44,17 @@ def main():
     data = [list(map(lambda x: ord(x) - ord("a"), line.replace("S", "a").replace("E", "z"))) for line in data]
 
     log.always("Part 1:")
-    result = solve(data, start, end)
+    result = solve(data, [start], end)
     log.always(result)
 
     log.always("Part 2:")
-    result = None
+    # Find all possible start locations
+    starts = []
     for y, line in enumerate(data):
         for x, v in enumerate(line):
             if v == 0:
-                _result = solve(data, (x, y), end)
-                if _result is not None and (result is None or _result < result):
-                    result = _result
+                starts.append((x, y))
+    result = solve(data, starts, end)
     log.always(result)
 
 
