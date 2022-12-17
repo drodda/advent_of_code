@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import functools
 import re
 import sys
 import traceback
@@ -35,29 +36,30 @@ def calculate_path_len(connections, start, end):
 
 
 def solve(flow_rates, paths, t_max=30, do_part_2=False):
-    def _solve(position, t, opened, result_in, move_elephant=False):
+    @functools.lru_cache(maxsize=None)
+    def _solve(position, t, opened, move_elephant=False):
         if t > 15 and not move_elephant:
-            log.info(f"Searching: {t} ('human') {position} {opened} {result_in}")
+            log.info(f"Searching: {t} ('human') {position} {opened}")
         else:
-            log.debug(f"Searching: {t} ({'elephant' if move_elephant else 'human'}) {position} {opened} {result_in}")
+            log.debug(f"Searching: {t} ({'elephant' if move_elephant else 'human'}) {position} {opened}")
         if t < 0 or len(opened) == len(flow_rates):
-            return result_in
-        result = result_in
+            return 0
+        result = 0
         # Try to move the human
         for _position, _cost in paths[position].items():
             _t = t - _cost - 1
             if _position not in opened and _t > 0:
                 # Move to _position and open valve
-                _opened = opened.union([_position])
-                _result_in = result_in + flow_rates[_position] * _t
-                _result = _solve(_position, _t, _opened, _result_in, move_elephant=move_elephant)
+                _opened = tuple(sorted(opened + (_position, )))
+                _result = flow_rates[_position] * _t
+                _result += _solve(_position, _t, _opened, move_elephant=move_elephant)
                 result = max(result, _result)
         # Also end the human's movement, move elephant
         if do_part_2 and not move_elephant and position != "AA":
-            _result = _solve("AA", t_max, opened, result_in, move_elephant=True)
+            _result = _solve("AA", t_max, opened, move_elephant=True)
             result = max(result, _result)
         return result
-    return _solve("AA", t_max, set(), 0)
+    return _solve("AA", t_max, tuple())
 
 
 def main():
