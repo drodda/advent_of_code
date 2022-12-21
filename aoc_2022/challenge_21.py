@@ -6,6 +6,19 @@ import traceback
 from common.utils import *
 
 
+"""
+Each line of the input is in the form:
+    cczh: sllz + lgvd
+or
+    dbpl: 5
+
+These can be considered equations of the form
+    r = expr
+Where expr is an expression that may be a constant, or may be and operation (+-*/) applied to two variables
+    r = a op b
+"""
+
+
 INVERSE_OPS = {
     "*": "/",
     "/": "*",
@@ -15,33 +28,35 @@ INVERSE_OPS = {
 
 
 def solve_part1(data):
-    q = deque([line.replace(":", " =") for line in data])
+    q = deque(data)
     vals = {}
     while q:
         line = q.popleft()
+        r, expr = line.split(": ")
         try:
-            exec(line, None, vals)
+            vals[r] = eval(expr, None, vals)
             log.debug(f"solved: {line}")
         except NameError:
-            # Can't solve, push it again
+            # Can't solve, push onto unsolved queue to try again next time
             q.append(line)
     return int(vals["root"])
 
 
 def solve_part2(data):
     vals = {}
-    unsolved = set([line.replace(":", " =") for line in data if not line[:4] in ["root", "humn"]])
+    unsolved = set([line for line in data if not line[:4] in ["root", "humn"]])
     while True:
         # Try so solve as many as possible
         _unsolved = set()
         blocked = True
         for line in unsolved:
+            r, expr = line.split(": ")
             try:
-                exec(line, None, vals)
+                vals[r] = eval(expr, None, vals)
                 log.debug(f"solved: {line}")
                 blocked = False
             except NameError:
-                # Can't solve, push it again
+                # Can't solve, push onto unsolved queue to try again next time
                 _unsolved.add(line)
         if blocked:
             break
@@ -53,24 +68,27 @@ def solve_part2(data):
         vals[b] = vals[a]
     else:
         vals[a] = vals[b]
-    # Reverse remaining unsolved equations in reverse
+    # Solve the remaining unsolved equations in reverse
     q = deque(unsolved)
     while q:
         line = q.popleft()
+        r, expr = line.split(": ")
+        a, op, b = expr.split(" ")
         # Check if reverse equation is solvable
-        r, _, a, op, b = line.split(" ")
         if r in vals and (a in vals or b in vals):
             # Reverse the equation
             _op = INVERSE_OPS[op]
-            if b in vals:
-                _line = f"{a} = {r} {_op} {b}"
-            else:  # a in vals
+            if b in vals:  # Solve for a
+                _r = a
+                _val = f"{r} {_op} {b}"
+            else:  # a in vals, solve for b
+                _r = b
                 if op in ["*", "+"]:
-                    _line = f"{b} = {r} {_op} {a}"
+                    _val = f"{r} {_op} {a}"
                 else:
-                    _line = f"{b} = {a} {op} {r}"
-            # And solve
-            exec(_line, None, vals)
+                    _val = f"{a} {op} {r}"
+            # Solve
+            vals[_r] = eval(_val, None, vals)
         else:
             # Can't solve now, try later
             q.append(line)
