@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-
+import math
 import sys
 import traceback
+from contextlib import suppress
+
 from common.utils import *
 
 
@@ -28,8 +30,14 @@ def parse_input_part2(lines):
     ]
 
 
+def solve_quadratic(a, b, c):
+    with suppress(ValueError):
+        p = math.sqrt(pow(b, 2) - 4 * a * c)
+        yield (-b - p) / (2 * a)
+        yield (-b + p) / (2 * a)
+
+
 def calculate_winning_times(_time, dist):
-    # This is slow - it calculates the distance for every time between 1 and _time - 1, and compares to dist
     # Distance traveled is
     #   d = t * (_time - t)
     # or
@@ -39,12 +47,14 @@ def calculate_winning_times(_time, dist):
     # The points where
     #   -t^2 + t + _time - dist = 0
     # can be calculated by solving the quadratic
-    result = 0
-    for t in range(1, _time):
-        d = t * (_time - t)
-        if d > dist:
-            log.debug(f"{_time}:{dist} beaten by {t} = {d}")
-            result += 1
+    end, start = solve_quadratic(-1, _time, -1 * dist)
+    # Results of solving quadratic are fractional values - round inward to the nearest whole number
+    _end = math.floor(end)
+    if _end == end:
+        # If the zero crossing is an exact integer then the travelled distance equals but does not beat dist: skip
+        _end -= 1
+    _start = math.ceil(start)
+    result = _end - _start + 1
     return result
 
 
