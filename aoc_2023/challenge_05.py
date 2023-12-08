@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import collections
 import sys
 import traceback
 
@@ -11,85 +11,72 @@ from common.utils import *
 # Order for convenience?
 
 
+# ranges =
+# src_start, src_end, dest_start, dest_end, offset
+
 
 def merge_transform(ranges, transforms):
-    # dest_start, src_start, _len = transform
-    # src_end = src_start + _len - 1
-    # dest_end = dest_start + _len - 1
-    # offset = dest_start - src_start
-
-    # Create ordered iterable of transforms
-    transforms = iter(sorted(transforms, key=lambda l: l[1]))
-    ranges = iter(ranges)
-
-    def _merge_transform():
-        # if not ranges:
-        #     log.debug(f"  No ranges, range {(src_end, src_end + _len - 1, dest_start, dest_start + _len - 1)}")
-        #     yield (src_end, src_end + _len - 1, dest_start, dest_start + _len - 1)
-        #     return
-        #
-        # void_start = ~sys.maxsize
-
-        # Apply transform to range:
-        # If transform is None or range << transform, yield range
-        # If range is None or transform << range yield transform
-        # If range
-
-
-        for range in ranges:
-            _src_start, _src_end, _dest_start, _dest_end = range
-
-            # # Yield new range before this range
-            # if src_start < _src_start and src_end >= void_start and void_start < _src_start:
-            #     new_range_start = max(src_start, void_start)
-            #     new_range_end = min(src_end, _src_start - 1)
-            #     log.debug(f"  Before existing range: {(new_range_start, new_range_end, new_range_start + offset, new_range_end + offset)}")
-            #     yield (new_range_start, new_range_end, new_range_start + offset, new_range_end + offset)
-            # void_start = _src_end + 1
-
-            # Yield existing ranges modified by transform
-            # Range before transform
+    # Map transforms onto existing ranges
+    log.info(f"Ranges before applying transforms: {ranges}")
+    result = []
+    for range in ranges:
+        _src_start, _src_end, _dest_start, _dest_end, _offset = range
+        for src_start, src_end, dest_start, dest_end, offset in transforms:
             if _dest_start < src_start:
-                range_len = _dest_start - min(_dest_end, src_start - 1)
-                log.debug(
-                    f"  Range before transform: {(_src_start, _src_start + range_len, _dest_start, _dest_start + range_len)}")
-                yield (_src_start, _src_start + range_len, _dest_start, _dest_start + range_len)
-                # Trim range that is before transform
-                _src_start += range_len + 1
-                _dest_start += range_len + 1
+                # Add non-overlapping part of range (or full range) before transform without modification
+                _len = min(src_start - _dest_start - 1, _dest_end - _dest_start)
+                log.debug(f"Range before, not changed: {(_src_start, _src_start + _len, _offset)}")
+                result.append((_src_start, _src_start + _len, _dest_start, _dest_start + _len, _offset))
+                _src_start += _len + 1
+                _dest_start += _len + 1
+            # _dest_start must now be >= src_start
+            if _dest_end >= src_start and _dest_start <= src_end:
+                # Add overlapping part of range, with modified offset
+                _len = min(_dest_end, src_end) - max(_dest_start, src_start)
+                log.debug(f"Range changed: {_len} of {_src_start, _src_start + _len} = {_dest_start, _dest_start + _len} ({_offset}) by {src_start, src_end} ({offset})")
+                result.append((_src_start, _src_start + _len, _dest_start, _dest_start + _len, _offset + offset))
+                _src_start += _len + 1
+                _dest_start += _len + 1
+        # Add non-overlapping part of range (or full range) after all transforms without modification
+        if _src_start <= _src_end:
+            log.debug(f"Range after all transforms, not changed: {(_src_start, _src_end, _offset)}")
+            result.append((_src_start, _src_end, _dest_start, _dest_end, _offset))
 
-            # Range overlapping transform
-            if _dest_end >= src_start:
-                range_len = _dest_start - min(_dest_end, src_end)
-                yield (_src_start, _src_start + range_len, _dest_start + offset, _dest_start + range_len + offset)
-                # Trim range that is before transform
-                _src_start += range_len + 1
-                _dest_start += range_len + 1
+        # result.append(range)
+    log.info(f"Ranges after applying transforms: {result}")
 
-            # Range after transform
-            if _dest_start <= _dest_end:
-                range_len = _dest_end - _dest_start
-                yield (_src_start, _src_end, _dest_start, _dest_end)
+    # Apply new ranges for transforms that do not overlap existing ranges
+    transforms_queue = collections.deque(transforms)
+    while transforms_queue:
+        transform = transforms_queue.pop()
+        src_start, src_end, dest_start, dest_end, offset = transform
+        for _src_start, _src_end, _dest_start, _dest_end, _offset in result:
+            if _src_end >= src_start and src_end >= _src_start:
+                log.info(f"Transform {src_start, src_end} overlaps {_src_start, _src_end}")
+                # Transform overlaps range: re-queue portions that do not overlap
+                if src_start < _src_start:
+                    _len = _src_start - src_start - 1
+                    log.info(f"Re-queueing before {src_start, src_start + _len}")
+                    transforms_queue.append((src_start, src_start + _len, dest_start, dest_start + _len, offset))
+                if src_end > _src_end:
+                    _len = src_end - _src_end - 1
+                    log.info(f"Re-queueing after {src_end - _len, src_end}")
+                    transforms_queue.append((src_end - _len, src_end, dest_end - _len, dest_end, offset))
+                break
+        else:
+            # Transform does not overlap any existing ranges: add to ranges
+            result.append(transform)
 
-            # Yield new range(s) from transform that are not covered by existing ranges
+    return list(sorted(result))
 
 
-        # # Yield new range after last range
-        # _src_start, _src_end, _dest_start, _dest_end = ranges[-1]
-        # if src_end < _src_end:
-        #     range_len = src_end - _src_end - 1
-        #     yield (max(src_end - range_len, src_start), src_end, min(dest_end + range_len, dest_start), dest_end)
-
-    return list(sorted(_merge_transform()))
-
-
-def merge_transforms(transforms):
+def merge_all_transforms(transforms_lst):
     ranges = []
-    for transform in transforms:
-        print(transform)
-        for _transform in transform:
-            ranges = merge_transform(ranges, _transform)
-            log.info(f"Transform {_transform} produces Ranges: {ranges}")
+    for transforms in transforms_lst:
+        log.info(f"Merging: {transforms}")
+        ranges = merge_transform(ranges, transforms)
+        log.info(f"Ranges: {ranges}")
+        log.info(f"")
     return ranges
 
     # ranges = [
@@ -109,22 +96,22 @@ def merge_transforms(transforms):
     #
     # log.info(f"Merged {len(ranges)} ranges")
     # return ranges
-#
-#
-# def calculate(ranges, seed):
-#     for (range_start, range_end, range_offset) in ranges:
-#         if range_start <= seed <= range_end:
-#             return seed + range_offset
-#     raise ValueError(f"Ranges does not cover value {seed}")
-#
-#
-# def solve(ranges, seeds):
-#     result = sys.maxsize
-#     for seed in seeds:
-#         _result = calculate(ranges, seed)
-#         log.info(f"{seed} = {_result}")
-#         result = min(result, _result)
-#     return result
+
+
+def calculate(ranges, seed):
+    for (src_start, src_end, _, _, offset) in ranges:
+        if src_start <= seed <= src_end:
+            return seed + offset
+    return seed
+
+
+def solve(ranges, seeds):
+    result = sys.maxsize
+    for seed in seeds:
+        _result = calculate(ranges, seed)
+        log.info(f"{seed} = {_result}")
+        result = min(result, _result)
+    return result
 
 
 # def expand_seeds(seeds):
@@ -140,32 +127,23 @@ def main():
     header = next(data)
     seeds = list(map(int, header[0].split("seeds: ", 1)[1].split(" ")))
 
-    transforms = []
+    transforms_lst = []
     for lines in data:
-        transform = [
-            list(map(int, line.split(" ")))
-            for line in lines[1:]
-        ]
-        transforms.append(transform)
-    transforms = transforms[:1]
-    print(transforms)
+        transforms = []
+        for line in lines[1:]:
+            dest_start, src_start, _len = map(int, line.split(" "))
+            transform = (src_start, src_start + _len - 1, dest_start, dest_start + _len - 1, dest_start - src_start)
+            transforms.append(transform)
+        transforms_lst.append(list(sorted(transforms)))
+    # print(transforms_lst)
+    transforms_lst = transforms_lst[:2]
+    ranges = merge_all_transforms(transforms_lst)
+    log.info(f"Ranges: {ranges}")
 
-    # transforms = transforms[:2]
-    # for transform in transforms:
-    #     transform = sorted(transform, key=lambda d: d[1])
-    #     for i in range(1, len(transform)):
-    #         if transform[i][1] != (transform[i-1][1] + transform[i-1][2]):
-    #             print(f"Transform {i} {transform[i][1]} vs {transform[i-1][1]} + {transform[i-1][2]} is not contigeous: {transform}")
+    log.always("Part 1:")
+    result = solve(ranges, seeds)
+    log.always(result)
 
-
-
-    ranges = merge_transforms(transforms)
-    # log.info(f"Ranges: {ranges}")
-    #
-    # log.always("Part 1:")
-    # result = solve(ranges, seeds)
-    # log.always(result)
-    #
     # log.always("Part 2:")
     # result = solve(transforms, expand_seeds(seeds))
     # log.always(result)
