@@ -6,25 +6,39 @@ import traceback
 from common.utils import *
 
 
-def solve(transforms, seeds):
-    result = sys.maxsize
-    for seed in seeds:
-        _result = seed
-        for transform in transforms:
+def solve(transforms, seed_ranges):
+    for i, transform in enumerate(transforms):
+        # TODO: This could be made more efficient by de-duplicating seed_ranges
+        log.info(f"{i}: Processing: {transform}")
+        log.info(f"{i}: Ranges = {seed_ranges}")
+        _seed_ranges = []
+        for seed_start, seed_len in seed_ranges:
+            log.debug(f"  Mapping {seed_start}+{seed_len}")
             for dest_start, src_start, _range in transform:
-                if src_start <= _result <= src_start + _range:
-                    _result = _result - src_start + dest_start
-                    break
-        log.info(f"{seed} = {_result}")
-        result = min(result, _result)
-    return result
-
-
-def expand_seeds(seeds):
-    for seed_start, seed_range in grouper(seeds, 2):
-        log.info(f"{seed_start}:{seed_range}")
-        for i in range(seed_range):
-            yield seed_start + i
+                # Seed range (or part thereof) before transform mapping remains unchanged
+                _len = min(seed_len, src_start - seed_start)
+                if _len > 0:
+                    log.debug(f"  > {seed_start}+{_len} (unchanged)")
+                    _seed_ranges.append((seed_start, _len))
+                    seed_start += _len
+                    seed_len -= _len
+                # Now seed_start > src_start if seed_len > 0
+                # Range covered by this transform - apply transform mapping
+                _len = min(seed_len, src_start + _range - seed_start)
+                if _len > 0:
+                    _seed_start = seed_start - src_start + dest_start
+                    log.debug(f"  > {seed_start}+{_len} -> {_seed_start}+{_len} (mapped from {src_start}+{_range}->{dest_start})")
+                    _seed_ranges.append((_seed_start, _len))
+                    seed_start += _len
+                    seed_len -= _len
+            # Seed range (or part thereof) after all transforms remains unchanged
+            if seed_len > 0:
+                log.debug(f"  > {seed_start}+{seed_len} (unchanged)")
+                _seed_ranges.append((seed_start, seed_len))
+            log.debug(f"")
+        seed_ranges = _seed_ranges
+        # break
+    return min([seed_start for seed_start, seed_len in seed_ranges])
 
 
 def main():
@@ -35,18 +49,20 @@ def main():
 
     transforms = []
     for lines in data:
-        transform = [
+        transform = list(sorted([
             list(map(int, line.split(" ")))
             for line in lines[1:]
-        ]
+        ], key=lambda lst: lst[1]))
         transforms.append(transform)
 
     log.always("Part 1:")
-    result = solve(transforms, seeds)
+    seed_ranges = [(v, 1) for v in seeds]
+    result = solve(transforms, seed_ranges)
     log.always(result)
 
     log.always("Part 2:")
-    result = solve(transforms, expand_seeds(seeds))
+    seed_ranges = grouper(seeds, 2, to_list=True)
+    result = solve(transforms, seed_ranges)
     log.always(result)
 
 
