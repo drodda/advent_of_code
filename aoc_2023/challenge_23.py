@@ -50,9 +50,9 @@ def parse(data):
     n_nodes = 0
     for point in sorted(points, key=lambda v: (v.imag, v.real)):
         if sum([(point + delta) in points for delta in DIRS.values()]) >= 3:
-            label = chr(ord("A") + n_nodes)
-            log.debug(f"Node: {label} = {point}")
             n_nodes += 1
+            label = f"{n_nodes:02d}"
+            log.debug(f"Node: {label} = {point}")
             nodes[label] = point
     point_to_node = {v: k for k, v in nodes.items()}
 
@@ -81,6 +81,20 @@ def parse(data):
 
 def solve_part1(network):
     result = 0
+
+    queue = collections.deque([[0, [LABEL_START]]])
+    while queue:
+        cost, path = queue.popleft()
+        for node, path_cost in network[path[-1]].items():
+            if node in path:
+                continue
+            _cost = cost + path_cost
+            _path = path + [node]
+            if node == LABEL_END:
+                log.info(f"Path {_path} cost {_cost}")
+                result = max(result, _cost)
+            else:
+                queue.append([_cost, _path])
     return result
 
 
