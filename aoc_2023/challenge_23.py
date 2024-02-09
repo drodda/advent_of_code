@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import collections
 import sys
 import traceback
 from common.utils import *
@@ -12,80 +13,85 @@ DIRS = {
     "<": -1+0j,
 }
 
-NEXT_DIR = {
-    **DIRS,
-    ".": list(DIRS.values()),
+PATH_SYM = "."
+
+NEXT_DIRS = {
+    **{
+        sym: [delta] for sym, delta in DIRS.items()
+    },
+    PATH_SYM: list(DIRS.values()),
 }
 
-PATH_SYM = list(NEXT_DIR.keys())
+PATH_SYMS = list(NEXT_DIRS.keys())
 
 LABEL_START = "START"
-LABEL_END = "START"
+LABEL_END = "END"
 
 
 def parse(data):
     points = {}
+    nodes = {}
     start = None
     end = None
     # Parse input, generate list of points that are path
     for y, line in enumerate(data):
-        for x, c in enumerate(line):
-            pos = x + y * 1j
-            if c in PATH_SYM:
-                points[pos] = c
-                if y == 0:
-                    start = pos
-                if y == len(data) - 1:
-                    end = pos
+        for x, sym in enumerate(line):
+            point = x + y * 1j
+            if sym in PATH_SYMS:
+                points[point] = sym
+                if y == 0 and sym == PATH_SYM:
+                    log.debug(f"Node: {LABEL_START} = {point}")
+                    nodes[LABEL_START] = point
+                if y == len(data) - 1 and sym == PATH_SYM:
+                    log.debug(f"Node: {LABEL_END} = {point}")
+                    nodes[LABEL_END] = point
 
     # Calculate points that are network nodes
-    nodes = {
-        LABEL_START: start,
-        LABEL_END: end
-    }
     n_nodes = 0
     for point in sorted(points, key=lambda v: (v.imag, v.real)):
         if sum([(point + delta) in points for delta in DIRS.values()]) >= 3:
-            log.debug(f"Node: {point}")
             label = chr(ord("A") + n_nodes)
+            log.debug(f"Node: {label} = {point}")
             n_nodes += 1
             nodes[label] = point
-    print(nodes)
-
     point_to_node = {v: k for k, v in nodes.items()}
 
     # Calculate network
-    network = {}
-    for start_point in nodes:
-        for _dir, delta in DIRS.items():
-            point = start_point + delta
-            path_length = 1
-            if point not in points:
-                continue
-            # Follow path to a new node
-            while point not in nodes:
-                neighbours = []
-                for next_dir, delta in DIRS.items():
-                    if next_dir == _dir:
-                        continue
-                    next_point = point + delta
-                    if
+    network = {label: {} for label in nodes.keys()}
+    queue = collections.deque()
+    for label, start_point in nodes.items():
+        for delta in DIRS.values():
+            next_point = start_point + delta
+            if next_point in points:
+                queue.append((next_point, label, [start_point, ]))
+    while queue:
+        point, start_label, path = queue.popleft()
+        if point in point_to_node:
+            end_label = point_to_node[point]
+            log.debug(f"Connection: {start_label} {(nodes[start_label])} - {end_label} ({nodes[end_label]}) = {len(path)}")
+            network[start_label][end_label] = len(path)
+            continue
+        for delta in NEXT_DIRS[points[point]]:
+            next_point = point + delta
+            if next_point not in path and next_point in points:
+                queue.append((next_point, start_label, path + [point]))
+    log.info(network)
+    return network
 
-    return points, start, end
+
+def solve_part1(network):
+    result = 0
+    return result
 
 
 def main():
     args = parse_args()
     data = read_lines(data_file_path_main(test=args.test), to_list=True)
-    grid, start, end = parse(data)
-
-    # print(grid)
-    # print(start)
-    # print(end)
+    network = parse(data)
 
     log.always("Part 1:")
-    # result = len(simulate(pts, {start_pt, }, 6 if args.test else 64))
-    # log.always(result)
+    result = solve_part1(network)
+    log.always(result)
 
     # log.always("Part 2:")
     # result = solve_part2(pts, start_pt, 5000 if args.test else 26501365)
