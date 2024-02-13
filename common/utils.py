@@ -17,7 +17,7 @@ log = logging.getLogger("main")
 
 
 __all__ = [
-    "SCRIPT_BASE", "data_file_path", "data_file_path_main", "parse_args", "trace", "log",
+    "SCRIPT_BASE", "input_file_path", "input_file_path_main", "parse_args", "trace", "log",
     "ltrim", "rtrim", "str_reversed",
     "read_lines", "read_multilines", "read_list_int", "read_csv_int", "read_csv_int_multiline",
     "grouper",
@@ -30,13 +30,13 @@ __all__ = [
 SCRIPT_BASE, _ = os.path.splitext(os.path.basename(sys.argv[0]))
 
 
-def data_file_path(suffix, var="", ext="txt"):
-    return os.path.join("data", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
+def input_file_path(suffix, var="", ext="txt"):
+    return os.path.join("input", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
 
 
-def data_file_path_main(test):
+def input_file_path_main(test):
     suffix = "test" if test else "full"
-    return data_file_path(suffix)
+    return input_file_path(suffix)
 
 
 def parse_args(args_func=None):
