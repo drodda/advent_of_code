@@ -4,3 +4,4 @@ numpy
 pygame
 sympy
 networkx
+advent_of_code_ocr
