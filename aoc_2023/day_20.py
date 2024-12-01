@@ -147,7 +147,7 @@ def solve(lines):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
 
     result_1, result_2 = solve(lines)
     log.always("Part 1:")

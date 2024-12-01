@@ -47,7 +47,7 @@ def solve_part2(directions, node_map):
 
 def main():
     args = parse_args()
-    _input = read_multilines(input_file_path_main(test=args.test))
+    _input = read_multilines(args.input)
     directions, node_map = parse_input(_input)
 
     if not args.test:

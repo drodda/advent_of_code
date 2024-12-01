@@ -8,8 +8,8 @@ from common.utils import *
 SAND_SOURCE = (500, 0)
 
 
-def parse_input(test=False):
-    lines = read_lines(input_file_path_main(test=test), to_list=True)
+def parse_input(input_path):
+    lines = read_lines(input_path, to_list=True)
     result = []
     for line in lines:
         parts = line.split(" -> ")
@@ -57,8 +57,7 @@ def simulate(rocks, floor=False):
 
 def main():
     args = parse_args()
-    data = parse_input(test=args.test)
-
+    data = parse_input(args.input)
     # Convert data to set of coordinates
     rocks = set()
     for row in data:

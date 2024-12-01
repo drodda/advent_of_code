@@ -23,7 +23,7 @@ def sum_numbers(obj, ignore_red=False):
 
 def main():
     args = parse_args()
-    with open(input_file_path_main(test=args.test)) as f:
+    with open(args.input) as f:
         data = json.load(f)
 
     log.always("Part 1")

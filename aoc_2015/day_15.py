@@ -45,7 +45,7 @@ def calculate_score(ingredients, mix, mask):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     ingredients = parse_input(lines)
     ingredient_vals = [vals for name, vals in ingredients]
     log.info(ingredients)

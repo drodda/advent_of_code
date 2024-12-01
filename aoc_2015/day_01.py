@@ -8,7 +8,7 @@ from common.utils import *
 
 def main():
     args = parse_args()
-    data = open(input_file_path_main(test=args.test)).read().strip()
+    data = open(args.input).read().strip()
 
     log.always("Part 1")
     result = data.count("(") - data.count(")")

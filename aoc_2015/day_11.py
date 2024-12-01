@@ -55,7 +55,7 @@ def plst_to_str(plst):
 
 def main():
     args = parse_args()
-    password = open(input_file_path_main(test=args.test)).read().strip()
+    password = open(args.input).read().strip()
     plst = list(map(ord, password))
 
     log.always("Part 1")

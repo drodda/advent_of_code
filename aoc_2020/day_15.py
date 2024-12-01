@@ -37,7 +37,7 @@ def run_all_elf_games(data, max_len):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     lines = read_lines(data_file)
     data = [list(map(int, line.split(","))) for line in lines]
 

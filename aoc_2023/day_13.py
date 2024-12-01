@@ -40,7 +40,7 @@ def solve(data, expected_errors=0):
 
 def main():
     args = parse_args()
-    data = list(read_multilines(input_file_path_main(test=args.test)))
+    data = list(read_multilines(args.input))
 
     log.always("Part 1:")
     result = solve(data)

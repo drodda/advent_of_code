@@ -53,7 +53,7 @@ def simulate_part2(speeds, t):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     speeds = parse_input(lines)
     t = 1000 if args.test else 2503
 

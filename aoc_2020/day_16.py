@@ -91,8 +91,7 @@ def parse_ticket(line):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=False) if not args.test else input_file_path("test", args.var)
-    rule_lines, own_ticket_lines, other_ticket_lines = read_multilines(data_file)
+    rule_lines, own_ticket_lines, other_ticket_lines = read_multilines(args.input)
     rules = [Rule(line, i) for i, line in enumerate(rule_lines)]
 
     own_ticket = parse_ticket(own_ticket_lines[1])

@@ -7,7 +7,7 @@ from common.utils import *
 
 def main():
     args = parse_args()
-    data = [list(map(int, item)) for item in read_multilines(input_file_path_main(test=args.test))]
+    data = [list(map(int, item)) for item in read_multilines(args.input)]
     total = sorted([sum(l) for l in data], reverse=True)
 
     log.always("Part 1:")

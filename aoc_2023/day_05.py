@@ -43,7 +43,7 @@ def solve(transforms, seed_ranges):
 
 def main():
     args = parse_args()
-    data = read_multilines(input_file_path_main(test=args.test))
+    data = read_multilines(args.input)
     header = next(data)
     seeds = list(map(int, header[0].split("seeds: ", 1)[1].split(" ")))
 

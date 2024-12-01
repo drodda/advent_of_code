@@ -38,7 +38,7 @@ def calculate_part_2(data):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     data = [line.split() for line in lines]
     data = [(line[0], int(line[1])) for line in data]
     log.always("Part 1:")

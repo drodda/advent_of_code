@@ -134,7 +134,8 @@ def packet_add_version(packet):
 
 
 def main():
-    data = open(input_file_path_main(test=False)).read()
+    args = parse_args()
+    data = open(args.input).read()
 
     log.always("Part 1:")
     packet = Packet.from_hex(data)

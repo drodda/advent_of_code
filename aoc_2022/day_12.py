@@ -29,7 +29,7 @@ def solve(data, starts, end):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test), to_list=True)
+    data = read_lines(args.input, to_list=True)
 
     # Find start and end coordinates in data
     start = None

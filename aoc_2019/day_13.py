@@ -129,7 +129,7 @@ def simulate_part_2(data, x_max, y_max, show_visualisation=False):
 
 def main():
     args = parse_args()
-    data = read_csv_int(input_file_path_main(test=False), to_list=True)
+    data = read_csv_int(args.input, to_list=True)
 
     # Part 1: Run with no input, read screen data
     log.always("Part 1")

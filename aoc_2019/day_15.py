@@ -140,7 +140,7 @@ def simulate(vm, start_position, start_distance, paths, walls, callback):
 
 def main():
     args = parse_args()
-    data = read_csv_int(input_file_path_main(test=False), to_list=True)
+    data = read_csv_int(args.input, to_list=True)
     visualiser = Visualiser() if args.verbose else None
 
     log.always("Part 1")

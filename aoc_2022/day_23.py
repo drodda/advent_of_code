@@ -109,7 +109,7 @@ def solve(data, verbose=False):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test), to_list=True)
+    data = read_lines(args.input, to_list=True)
 
     result_1, result_2 = solve(data, verbose=(args.verbose >= 1))
 

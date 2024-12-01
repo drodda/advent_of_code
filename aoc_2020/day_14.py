@@ -56,7 +56,7 @@ def expand_floating_address(bitmask, address):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data = read_lines(data_file, to_list=True)
 
     log.verbose(data)

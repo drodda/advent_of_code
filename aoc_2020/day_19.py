@@ -56,7 +56,7 @@ def test_rules(rules, lines):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     # data_file = "data/challenge_19b_test.txt"
     lines_rules, lines_test = read_multilines(data_file)
 

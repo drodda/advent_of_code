@@ -17,7 +17,8 @@ def parse_data_line(line):
 
 
 def load_data(test):
-    data_lines = read_lines(input_file_path_main(test=test))
+    args = parse_args()
+    data_lines = read_lines(args.input)
     data = [parse_data_line(line) for line in data_lines]
     # Remove Nones
     data = [line for line in data if line is not None]

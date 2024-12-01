@@ -22,7 +22,7 @@ def simulate(vx, vy, x_max, y_min):
 
 def main():
     args = parse_args()
-    data = open(input_file_path_main(test=args.test)).read().strip()
+    data = open(args.input).read().strip()
 
     groups = re.match(r"target area: x=(-?[\d]+)..(-?[\d]+), y=(-?[\d]+)..(-?[\d]+)", data).groups()
     x1, x2, y1, y2 = list(map(int, groups))

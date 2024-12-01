@@ -64,7 +64,7 @@ def calculate_basin_size(data, point):
 
 def main():
     args = parse_args()
-    data_raw = read_lines(input_file_path_main(test=args.test))
+    data_raw = read_lines(args.input)
     data = np.array([list(map(int, list(line))) for line in data_raw])
 
     log.always("Part 1:")

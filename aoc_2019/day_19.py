@@ -106,7 +106,7 @@ def solve_part2(beam_finder, test=False):
 
 def main():
     args = parse_args()
-    data = read_csv_int(input_file_path_main(test=False), to_list=True)
+    data = read_csv_int(args.input, to_list=True)
     beam_finder = BeamFinder(data)
 
     log.always("Part 1")

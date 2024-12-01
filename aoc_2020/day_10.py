@@ -31,12 +31,8 @@ def permutations(n):
 def main():
     args = parse_args()
 
-    data_file = input_file_path_main(test=args.test)
-    if args.test:
-        data_file = input_file_path("test", "a")
-
     # Read data
-    data_list = read_list_int(data_file, to_list=True)
+    data_list = read_list_int(args.input, to_list=True)
     # Add start (0) and end (max+3)
     data_list.append(0)
     data_list.append(max(data_list) + 3)

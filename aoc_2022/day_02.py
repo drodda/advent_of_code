@@ -28,7 +28,7 @@ def calculate_round_part2(them, _result):
 
 def main():
     args = parse_args()
-    data = [line.split() for line in read_lines(input_file_path_main(test=args.test))]
+    data = [line.split() for line in read_lines(args.input)]
 
     log.always("Part 1:")
     result = sum([calculate_round_part1(them, you) for them, you in data])

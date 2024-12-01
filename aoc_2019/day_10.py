@@ -107,7 +107,7 @@ def calculate_part_2(nodes, node):
 
 def main():
     args = parse_args()
-    nodes = parse_data(read_lines(input_file_path_main(test=args.test)))
+    nodes = parse_data(read_lines(args.input))
     log.always("Part 1:")
     node, count = calculate_part_1(nodes)
     log.info(f"Best node: {node}")

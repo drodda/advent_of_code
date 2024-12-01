@@ -123,7 +123,7 @@ def do_operate(x, y, operation):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     lines = read_lines(data_file, to_list=True)
 
     # import ipdb; ipdb.set_trace()

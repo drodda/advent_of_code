@@ -7,9 +7,9 @@ import traceback
 from common.utils import *
 
 
-def parse_input(test=False):
+def parse_input(input_path):
     _re = re.compile(r"Valve ([A-Z]+) has flow rate=(\d+); tunnels? leads? to valves? (.+)")
-    lines = read_lines(input_file_path_main(test=test))
+    lines = read_lines(input_path)
     flow_rates = {}
     connections = {}
     for line in lines:
@@ -64,7 +64,7 @@ def solve(flow_rates, paths, t_max=30, do_part_2=False):
 
 def main():
     args = parse_args()
-    flow_rates, connections = parse_input(test=args.test)
+    flow_rates, connections = parse_input(args.input)
 
     # Calculate paths between all nodes with non-zero flow rate
     paths = {}

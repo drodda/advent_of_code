@@ -48,7 +48,7 @@ def find_valid_passwords(val_min, val_max, *criteria):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     val_min, val_max = read_list_int(data_file)
     valid = find_valid_passwords(val_min, val_max, check_increasing, check_repeat)
     log.always("Part 1")

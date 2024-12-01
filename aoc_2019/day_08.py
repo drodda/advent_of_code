@@ -14,7 +14,7 @@ TRANSPARENT = 2
 
 def main():
     args = parse_args()
-    data_raw = list(map(int, open(input_file_path_main(test=args.test)).read().strip()))
+    data_raw = list(map(int, open(args.input).read().strip()))
     log.verbose(data_raw)
 
     width = 3 if args.test else 25

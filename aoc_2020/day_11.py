@@ -114,7 +114,7 @@ def mutate_until_stable(data, neighbour_func, occupied_thresh):
 def main():
     args = parse_args()
 
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data_orig = read_lines(data_file)
     data_orig = [list(line) for line in data_orig]
     data = pad_data(data_orig)

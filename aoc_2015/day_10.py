@@ -19,7 +19,7 @@ def iterate(val, n=1, verbose=False):
 
 def main():
     args = parse_args()
-    val = open(input_file_path_main(test=args.test)).read().strip()
+    val = open(args.input).read().strip()
     n1 = 5 if args.test else 40
     n2 = 50 - n1
 

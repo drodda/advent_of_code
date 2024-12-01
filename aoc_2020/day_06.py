@@ -46,7 +46,7 @@ def flatten_input(entries_text):
 def main():
     args = parse_args()
 
-    entries_text = parse_input(input_file_path_main(test=args.test))
+    entries_text = parse_input(args.input)
     entries = flatten_input(entries_text)
 
     any_count = 0

@@ -36,7 +36,7 @@ def fold(grid, axis, val):
 
 def main():
     args = parse_args()
-    points_str, folds_str = read_multilines(input_file_path_main(test=args.test))
+    points_str, folds_str = read_multilines(args.input)
 
     points = [list(map(int, line.split(","))) for line in points_str]
     x_max = max([x for x, y in points])

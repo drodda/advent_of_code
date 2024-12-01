@@ -12,7 +12,7 @@ from intcode_vm import *
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     data = [list(map(int, line.split(","))) for line in lines]
 
     log.always("Part 1")

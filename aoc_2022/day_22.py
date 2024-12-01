@@ -6,8 +6,8 @@ import traceback
 from common.utils import *
 
 
-def parse_input(test=False):
-    world, path_str = read_multilines(input_file_path_main(test=test))
+def parse_input(input_path):
+    world, path_str = read_multilines(input_path)
 
     path = []
     s = ""
@@ -252,7 +252,7 @@ class CubeGrid(FlatGrid):
 
 def main():
     args = parse_args()
-    world, path = parse_input(test=args.test)
+    world, path = parse_input(args.input)
 
     log.always("Part 1:")
     flat_grid = FlatGrid(world, path)

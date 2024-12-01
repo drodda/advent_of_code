@@ -27,7 +27,7 @@ def calculate_fuel_masses(mass):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data = read_list_int(data_file)
 
     result_basic = 0

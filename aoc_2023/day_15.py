@@ -44,7 +44,7 @@ def solve_part2(data):
 
 def main():
     args = parse_args()
-    with open(input_file_path_main(test=args.test)) as f:
+    with open(args.input) as f:
         data = f.read().strip().split(",")
 
     log.always("Part 1:")

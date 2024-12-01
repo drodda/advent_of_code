@@ -17,7 +17,7 @@ log = logging.getLogger("main")
 
 
 __all__ = [
-    "SCRIPT_BASE", "input_file_path", "input_file_path_main", "parse_args", "trace", "log",
+    "parse_args", "trace", "log",
     "ltrim", "rtrim", "str_reversed",
     "read_lines", "read_multilines", "read_list_int", "read_csv_int", "read_csv_int_multiline",
     "grouper",
@@ -26,27 +26,20 @@ __all__ = [
 ]
 
 
-# Get script name
-SCRIPT_BASE, _ = os.path.splitext(os.path.basename(sys.argv[0]))
-
-
-def input_file_path(suffix, var="", ext="txt"):
-    return os.path.join("input", f"{SCRIPT_BASE}{var}_{suffix}.{ext}")
-
-
-def input_file_path_main(test):
-    suffix = "test" if test else "full"
-    return input_file_path(suffix)
+ALL_PARTS = (1, 2)
 
 
 def parse_args(args_func=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--test", help="Use test data", action="store_true")
-    parser.add_argument("--var", help="File variant to use", default="")
+    parser.add_argument("input", help="Input file")
+    parser.add_argument('-p', '--part', type=int, choices=ALL_PARTS, default=None)
     parser.add_argument('-v', '--verbose', action='count', default=0)
     if args_func:
         args_func(parser)
     args = parser.parse_args()
+
+    args.part1 = args.part in (None, 1)
+    args.part2 = args.part in (None, 2)
 
     log_level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(args.verbose, VERBOSE)
     logging.basicConfig(

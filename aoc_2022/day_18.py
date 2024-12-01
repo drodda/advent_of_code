@@ -61,7 +61,7 @@ def solve_part2(data):
 
 def main():
     args = parse_args()
-    data = [tuple(item) for item in read_csv_int_multiline(input_file_path_main(test=args.test), to_list=True)]
+    data = [tuple(item) for item in read_csv_int_multiline(args.input, to_list=True)]
 
     log.always("Part 1:")
     result = solve_part1(data)

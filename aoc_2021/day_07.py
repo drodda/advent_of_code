@@ -28,7 +28,7 @@ def calculate_part_2(data):
 
 def main():
     args = parse_args()
-    data = np.array(read_csv_int(input_file_path_main(test=args.test), to_list=True))
+    data = np.array(read_csv_int(args.input, to_list=True))
     log.always("Part 1:")
     log.always(calculate_part_1(data))
     log.always("Part 2:")

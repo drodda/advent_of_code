@@ -68,7 +68,7 @@ def is_winning_board(board):
 
 def main():
     args = parse_args()
-    data = read_multilines(input_file_path_main(test=args.test))
+    data = read_multilines(args.input)
     numbers = list(map(int, (",".join(next(data))).split(",")))
     # trace()
 

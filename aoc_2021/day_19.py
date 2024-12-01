@@ -108,7 +108,7 @@ def parse_block(lines):
 
 def main():
     args = parse_args()
-    data_text = read_multilines(input_file_path_main(test=args.test))
+    data_text = read_multilines(args.input)
     data = dict([parse_block(lines) for lines in data_text])
 
     known_sensors = {0: data[0]}

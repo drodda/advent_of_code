@@ -95,37 +95,37 @@ def validate_entry(entry):
 
 def main():
     args = parse_args()
-    entries = parse_input(input_file_path_main(test=args.test))
+    entries = parse_input(args.input)
 
-    log.always("Part 1:")
-    valid = 0
-    for entry in entries:
-        try:
-            for field in FIELDS_REQUIRED:
-                if field not in entry:
-                    raise MissingField(field)
-        except MissingField as e:
-            pass
-        else:
-            valid += 1
-    log.always(valid)
+    if args.part1:
+        log.always("Part 1:")
+        valid = 0
+        for entry in entries:
+            try:
+                for field in FIELDS_REQUIRED:
+                    if field not in entry:
+                        raise MissingField(field)
+            except MissingField as e:
+                pass
+            else:
+                valid += 1
+        log.always(valid)
 
-    log.always("Part 2:")
-    # entries = parse_input(input_file_path(suffix="valid", var="b"))
-    # entries = parse_input(input_file_path(suffix="invalid", var="b"))
-    valid = 0
-    for entry in entries:
-        try:
-            validate_entry(entry)
-        except MissingField as e:
-            log.debug(entry)
-            log.debug(e)
-        except InvalidField as e:
-            log.debug(entry)
-            log.debug(e)
-        else:
-            valid += 1
-    log.always(valid)
+    if args.part1:
+        log.always("Part 2:")
+        valid = 0
+        for entry in entries:
+            try:
+                validate_entry(entry)
+            except MissingField as e:
+                log.debug(entry)
+                log.debug(e)
+            except InvalidField as e:
+                log.debug(entry)
+                log.debug(e)
+            else:
+                valid += 1
+        log.always(valid)
 
 
 if __name__ == "__main__":

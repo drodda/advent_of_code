@@ -101,29 +101,19 @@ def action_swap(action):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
-    vm = VM(lines)
+    lines = read_lines(args.input, to_list=True)
+
     log.always("Part 1:")
+    vm = VM(lines)
     try:
         vm.run()
     except ExecutionInfiniteLoop:
         log.always(f"{vm.acc}")
     except ExecutionException as e:
         log.always(f"Execution finished: {e}")
-
     log.always()
-    log.always("Part 2:")
-    if args.test:
-        if args.test:
-            lines = read_lines(input_file_path("test", "b"))
-            vm = VM(lines)
-            try:
-                vm.run()
-            except ExecutionInfiniteLoop:
-                log.always(f"{vm.acc}")
-            except ExecutionException as e:
-                log.always(f"Execution finished: {e}")
 
+    log.always("Part 2:")
     # Find instructions that were used in the infinite loop in Part 1
     used_instructions = [i for i in range(len(vm.instructions)) if vm.instruction_seen(vm.get_instruction(i))]
     for i in used_instructions:

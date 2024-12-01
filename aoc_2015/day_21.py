@@ -89,7 +89,7 @@ def solve(boss):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     boss = {k.lower(): int(v) for k, v in [line.split(": ") for line in lines]}
 
     result_1, result_2 = solve(boss)

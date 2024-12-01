@@ -130,7 +130,7 @@ def solve(data, hard=False):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     data = {k.lower(): int(v) for k, v in [line.split(": ") for line in lines]}
 
     log.always("Part 1")

@@ -89,7 +89,7 @@ def solve(block_values, i=0, z=0, largest=True):
 
 def main():
     args = parse_args()
-    data_raw = read_lines(input_file_path_main(test=False))
+    data_raw = read_lines(args.input)
 
     instructions = [line.split(" ") for line in data_raw]
     # Extract only the values from each block that are different

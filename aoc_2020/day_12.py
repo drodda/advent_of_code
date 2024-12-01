@@ -83,7 +83,7 @@ def main():
     ferry_a = FerryA(1, 0)
     ferry_b = FerryB(10, 1)
 
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data = read_lines(data_file, to_list=True)
 
     for line in data:

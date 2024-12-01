@@ -10,7 +10,7 @@ TARGET_SUM = 2020
 
 def main():
     args = parse_args()
-    data = list(read_list_int(input_file_path_main(test=args.test)))
+    data = list(read_list_int(args.input))
 
     log.always("Part 1:")
     for i, x in enumerate(data):

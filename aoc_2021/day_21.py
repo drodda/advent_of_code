@@ -70,7 +70,7 @@ def simulate_quantum(pos_1, pos_2):
 
 def main():
     args = parse_args()
-    data_raw = read_lines(input_file_path_main(test=args.test), to_list=True)
+    data_raw = read_lines(args.input, to_list=True)
     pos_1 = int(data_raw[0].split(" ")[-1])
     pos_2 = int(data_raw[1].split(" ")[-1])
 

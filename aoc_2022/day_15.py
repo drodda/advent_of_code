@@ -7,10 +7,10 @@ import re
 from common.utils import *
 
 
-def parse_input(test=False):
+def parse_input(input_path):
     """ Parse input file: return list of ((sensor x, y), (beacon x, y)) coordinates """
     _re = re.compile(r"Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)")
-    lines = read_lines(input_file_path_main(test=test))
+    lines = read_lines(input_path)
     result = []
     for line in lines:
         s_x, s_y, b_x, b_y = map(int, _re.match(line).groups())
@@ -72,14 +72,15 @@ def solve_part2(data, test=False):
 
 def main():
     args = parse_args()
-    data = parse_input(test=args.test)
+    data = parse_input(args.input)
+    test = "_test" in args.input
 
     log.always("Part 1:")
-    result = solve_part1(data, test=args.test)
+    result = solve_part1(data, test=test)
     log.always(result)
 
     log.always("Part 2:")
-    result = solve_part2(data, test=args.test)
+    result = solve_part2(data, test=test)
     log.always(result)
 
 

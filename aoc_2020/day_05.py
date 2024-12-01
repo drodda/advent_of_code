@@ -45,7 +45,7 @@ def parse_seat(text):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
 
     max_seat_id = 0
     seat_array = np.zeros(N_SEATS, dtype=np.bool)

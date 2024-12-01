@@ -68,14 +68,11 @@ def main():
     args = parse_args()
     log.always("Part 1:")
     phases = list(range(PHASES_LEN))
-    result = solve(input_file_path_main(test=args.test), phases, False)
+    result = solve(args.input, phases, False)
     log.always(result)
     log.always("Part 2:")
-    data_file = input_file_path_main(test=args.test)
-    if args.test:
-        data_file = input_file_path("test", "b")
     phases = list(range(5, 5+PHASES_LEN))
-    result = solve(data_file, phases, True)
+    result = solve(args.input, phases, True)
     log.always(result)
 
 

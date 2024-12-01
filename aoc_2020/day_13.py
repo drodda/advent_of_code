@@ -16,7 +16,7 @@ def next_time(time_now, time_start):
 def main():
     args = parse_args()
 
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data = read_lines(data_file, to_list=True)
 
     time_now = int(data[0])

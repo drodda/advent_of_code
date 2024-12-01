@@ -239,7 +239,7 @@ def solve(data):
 
 def main():
     args = parse_args()
-    data = read_csv_int(input_file_path_main(test=False), to_list=True)
+    data = read_csv_int(args.input, to_list=True)
 
     if args.test:
         play_manual(data)

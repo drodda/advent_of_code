@@ -44,7 +44,7 @@ def solve_part2(data):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
 
     for line in lines:
         log.info(line)

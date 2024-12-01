@@ -51,7 +51,7 @@ def solve(network):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     network = parse(lines)
 
     log.always("Part 1:")

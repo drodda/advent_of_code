@@ -25,7 +25,7 @@ def solve(volumes, total):
 
 def main():
     args = parse_args()
-    volumes = read_list_int(input_file_path_main(test=args.test), to_list=True)
+    volumes = read_list_int(args.input, to_list=True)
 
     total = 25 if args.test else 150
 

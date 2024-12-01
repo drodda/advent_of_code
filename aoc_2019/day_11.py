@@ -76,8 +76,8 @@ def run_simulation(data, start_value):
 
 
 def main():
-    parse_args()
-    data = read_csv_int(input_file_path_main(test=False), to_list=True)
+    args = parse_args()
+    data = read_csv_int(args.input, to_list=True)
 
     log.always("Part 1")
     log.always(len(run_simulation(data, 0)))

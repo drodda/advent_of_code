@@ -106,7 +106,7 @@ def solve_part2(world, iterations, verbose=False):
 def main():
     args = parse_args()
     verbose = (args.verbose >= 2)
-    data_raw = [list(line) for line in read_lines(input_file_path_main(test=args.test))]
+    data_raw = [list(line) for line in read_lines(args.input)]
     world = np.array(data_raw) == "#"
 
     log.always("Part 1:")

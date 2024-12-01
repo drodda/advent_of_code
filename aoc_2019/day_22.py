@@ -119,7 +119,7 @@ def solve(operations, n_cards, target, iterations=1):
 def main():
     args = parse_args()
     verbose = (args.verbose >= 2)
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     operations = parse_operations(lines)
 
     log.always("Part 1:")

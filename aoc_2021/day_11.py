@@ -35,7 +35,7 @@ def step(data):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     data = np.array([list(map(int, line)) for line in lines])
     log.verbose(data)
 

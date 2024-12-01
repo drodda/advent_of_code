@@ -46,7 +46,7 @@ def calculate_part_2(data_array):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     data = [list(map(int, line)) for line in lines]
     data_array = np.array(data)
     log.always("Part 1:")

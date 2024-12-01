@@ -48,7 +48,7 @@ def find_intersections(path1, path2):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data = read_multilines(data_file)
     # Split paths into a list of steps
     data = [[s.split(",") for s in group] for group in data]

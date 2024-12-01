@@ -23,7 +23,7 @@ def presents_2(_factors):
 
 def main():
     args = parse_args()
-    value = int(open(input_file_path_main(test=args.test)).read())
+    value = int(open(args.input).read())
 
     i = 1
     result_1 = None

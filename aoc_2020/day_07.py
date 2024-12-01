@@ -47,22 +47,20 @@ def bag_contents_count(bag_dict, bag_col):
 
 def main():
     args = parse_args()
-    bag_dict = parse_input(input_file_path_main(test=args.test))
+    bag_dict = parse_input(args.input)
 
-    log.always("Part 1:")
+    if args.part1:
+        log.always("Part 1:")
+        count = 0
+        for col in bag_dict.keys():
+            if bag_can_contain(bag_dict, col):
+                log.debug(col)
+                count += 1
+        log.always(count)
 
-    count = 0
-    for col in bag_dict.keys():
-        if bag_can_contain(bag_dict, col):
-            log.debug(col)
-            count += 1
-
-    log.always(count)
-
-    log.always("Part 2:")
-    if args.test:
-        bag_dict = parse_input(input_file_path("test", "b"))
-    log.always(bag_contents_count(bag_dict, "shiny gold"))
+    if args.part2:
+        log.always("Part 2:")
+        log.always(bag_contents_count(bag_dict, "shiny gold"))
 
 
 if __name__ == "__main__":

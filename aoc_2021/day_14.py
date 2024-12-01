@@ -34,7 +34,7 @@ def simulate(polymer, replacements, n):
 
 def main():
     args = parse_args()
-    (polymer, *_), replacements_str = read_multilines(input_file_path_main(test=args.test))
+    (polymer, *_), replacements_str = read_multilines(args.input)
     replacements = dict([line.split(" -> ") for line in replacements_str])
 
     log.always("Part 1:")

@@ -97,7 +97,7 @@ def solve(network):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test), to_list=True)
+    data = read_lines(args.input, to_list=True)
     points, nodes = parse_input(data)
 
     log.always("Part 1:")

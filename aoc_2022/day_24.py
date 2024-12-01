@@ -14,8 +14,8 @@ DIRECTIONS = {
 }
 
 
-def parse_input(test=False):
-    data = read_lines(input_file_path_main(test=test), to_list=True)
+def parse_input(input_path):
+    data = read_lines(input_path, to_list=True)
     blizzards = collections.defaultdict(set)
     for y, line in enumerate(data[1:-1]):
         for x, c in enumerate(line[1:-1]):
@@ -94,7 +94,7 @@ def solve(dims, blizzards):
 
 def main():
     args = parse_args()
-    dims, blizzards = parse_input(test=args.test)
+    dims, blizzards = parse_input(args.input)
 
     result_1, result_2 = solve(dims, blizzards)
 

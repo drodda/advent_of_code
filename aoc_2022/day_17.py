@@ -6,8 +6,8 @@ import numpy as np
 from common.utils import *
 
 
-def parse_input(test=False):
-    data = open(input_file_path_main(test=test)).read().strip()
+def parse_input(input_path):
+    data = open(input_path).read().strip()
     # Convert to +1 / -1
     data = [1 if v == ">" else -1 for v in data]
     return data
@@ -95,8 +95,7 @@ def solve(winds):
 
 def main():
     args = parse_args()
-    # data = open(data_file_path_main(test=args.test)).read().strip()
-    data = parse_input(test=args.test)
+    data = parse_input(args.input)
 
     result_1, result_2 = solve(data)
     log.always("Part 1:")

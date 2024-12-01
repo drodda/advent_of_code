@@ -10,9 +10,9 @@ from common.utils import *
 RE_MOVE = re.compile(r"move (\d+) from (\d+) to (\d+)")
 
 
-def parse_input(test=False):
+def parse_input(input_path):
     """ Parse input file: return stack structure and list of moves as integers """
-    stacks_s, moves_s = read_multilines(input_file_path_main(test=test))
+    stacks_s, moves_s = read_multilines(input_path)
 
     # Parse stacks into list of lists in reverse order
     n_stacks = int((len(stacks_s[-1]) + 1) / 4)
@@ -49,7 +49,7 @@ def solve(stacks, moves, smart=False):
 
 def main():
     args = parse_args()
-    stacks, moves = parse_input(test=args.test)
+    stacks, moves = parse_input(args.input)
 
     log.always("Part 1:")
     result = solve(stacks, moves)

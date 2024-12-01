@@ -66,7 +66,7 @@ def reverse_mutate(molecule, reversed_replacements, explored=None):
 
 def main():
     args = parse_args()
-    replacements_lines, molecule_lines = read_multilines(input_file_path_main(test=args.test))
+    replacements_lines, molecule_lines = read_multilines(args.input)
     replacements = parse_replacements(replacements_lines)
     molecule = molecule_lines[0]
 

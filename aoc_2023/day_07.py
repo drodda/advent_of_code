@@ -75,7 +75,7 @@ def solve(data):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     data = {v[0]: int(v[1]) for v in [line.split() for line in lines]}
     log.info(data)
 

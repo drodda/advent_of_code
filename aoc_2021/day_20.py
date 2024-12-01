@@ -48,7 +48,7 @@ def image_enhance(image_data, image_enhancement_algorithm):
 
 def main():
     args = parse_args()
-    data_raw = list(read_multilines(input_file_path_main(test=args.test)))
+    data_raw = list(read_multilines(args.input))
     image_enhancement_algorithm = [1 if val == "#" else 0 for val in data_raw[0][0]]
     image_data = defaultdict(factory_0)
     for y, line in enumerate(data_raw[1]):

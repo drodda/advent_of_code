@@ -44,7 +44,7 @@ def data_find_invalid_sum(data, value):
 
 def main():
     args = parse_args()
-    data = list(read_list_int(input_file_path_main(test=args.test)))
+    data = list(read_list_int(args.input))
 
     preamble_len = 5 if args.test else 25
 

@@ -128,7 +128,7 @@ def play_round_recursive(cards1, cards2, history1, history2, g=1, r=1):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     cards1_str, cards2_str = read_multilines(data_file)
     cards1 = list(map(int, cards1_str[1:]))
     cards2 = list(map(int, cards2_str[1:]))

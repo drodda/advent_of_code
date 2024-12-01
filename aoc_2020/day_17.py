@@ -130,7 +130,7 @@ def get_limit(data, axis):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     lines = read_lines(data_file)
     data = parse_input(lines)
 

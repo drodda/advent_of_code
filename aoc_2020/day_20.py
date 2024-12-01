@@ -145,7 +145,7 @@ def array_to_text(array):
 
 def main():
     args = parse_args()
-    data_file = input_file_path_main(test=args.test)
+    data_file = args.input
     data_text = read_multilines(data_file)
     tiles = [Tile(lines) for lines in data_text]
     n = int(math.sqrt(len(tiles)))

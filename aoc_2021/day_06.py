@@ -32,7 +32,7 @@ def run_sim(fish_count, n_days):
 
 def main():
     args = parse_args()
-    data = read_csv_int(input_file_path_main(test=args.test))
+    data = read_csv_int(args.input)
     fish_count = parse_data(data, SPAWN_FIRST)
     log.always("Part 1:")
     fish_count = run_sim(fish_count, 80)

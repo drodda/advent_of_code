@@ -43,7 +43,7 @@ def solve(lines, evaluator):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
 
     log.always("Part 1")
     result = solve(lines, evaluator=evaluate_str_1)

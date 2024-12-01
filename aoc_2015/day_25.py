@@ -25,7 +25,7 @@ def solve(line):
 
 def main():
     args = parse_args()
-    line = open(input_file_path_main(test=args.test)).read().strip()
+    line = open(args.input).read().strip()
 
     log.always("Part 1")
     result = solve(line)

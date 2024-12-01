@@ -49,7 +49,7 @@ def find_best_arrangement(all_names, scores):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
     scores = parse_input(lines)
     all_names = list(scores.keys())
 

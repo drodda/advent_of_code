@@ -13,8 +13,8 @@ RE_LINE = r"Blueprint (\d+): Each ore robot costs (\d+) ore. Each clay robot cos
 RESOURCE_LIMIT = 50
 
 
-def parse_input(test=False):
-    lines = read_lines(input_file_path_main(test=test))
+def parse_input(input_path):
+    lines = read_lines(input_path)
     _re = re.compile(RE_LINE)
     result = []
     for line in lines:
@@ -114,7 +114,7 @@ def solve_part2(data):
 
 def main():
     args = parse_args()
-    data = parse_input(test=args.test)
+    data = parse_input(args.input)
 
     log.always("Part 1:")
     result = solve_part1(data)

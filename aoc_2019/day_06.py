@@ -86,23 +86,21 @@ def path_between(node_a, node_b, nodes_parent):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test))
+    data = read_lines(args.input)
     nodes, node_children, nodes_parent, node_map = parse_input(data)
 
     log.verbose(json.dumps(node_map, indent=2))
 
-    log.always("Part 1")
-    log.always(calculate_checksum(node_map))
+    if args.part1:
+        log.always("Part 1")
+        log.always(calculate_checksum(node_map))
 
-    if args.test:
-        data = read_lines(input_file_path("test", "b"))
-        nodes, node_children, nodes_parent, node_map = parse_input(data)
-
-    log.always("Part 2")
-    path_you_san = path_between("YOU", "SAN", nodes_parent)
-    log.verbose(path_you_san)
-    # Number of transfers is path length - 1 as YOU is already a child of path[0]
-    log.always(len(path_you_san) - 1)
+    if args.part2:
+        log.always("Part 2")
+        path_you_san = path_between("YOU", "SAN", nodes_parent)
+        log.verbose(path_you_san)
+        # Number of transfers is path length - 1 as YOU is already a child of path[0]
+        log.always(len(path_you_san) - 1)
 
 
 if __name__ == "__main__":

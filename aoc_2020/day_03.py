@@ -29,7 +29,7 @@ PART2_STEPS = [
 
 def main():
     args = parse_args()
-    lines = list(read_lines(input_file_path_main(test=args.test)))
+    lines = list(read_lines(args.input))
 
     log.always("Part 1:")
     log.always(count_trees_in_path(lines, 0, 3))

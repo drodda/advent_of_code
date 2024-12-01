@@ -64,7 +64,7 @@ def main():
     data = [
         # Evaluate to Python objects
         list(map(ast.literal_eval, items))
-        for items in read_multilines(input_file_path_main(test=args.test))
+        for items in read_multilines(args.input)
     ]
 
     log.always("Part 1:")

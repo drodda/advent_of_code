@@ -90,7 +90,7 @@ def solve_part2(workflows):
 
 def main():
     args = parse_args()
-    workflow_lines, part_lines = list(read_multilines(input_file_path_main(test=args.test)))
+    workflow_lines, part_lines = list(read_multilines(args.input))
     workflows = parse_workflows(workflow_lines)
     parts = [
         {k: int(v) for k, v in [s.split("=") for s in line.strip("{}").split(",")]}

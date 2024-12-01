@@ -67,7 +67,7 @@ def solve(data):
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test), to_list=True)
+    lines = read_lines(args.input, to_list=True)
 
     data_part1 = parse_input_part1(lines)
     log.debug(data_part1)

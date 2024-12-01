@@ -26,7 +26,7 @@ def debug_print_data(counts_dict):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test))
+    data = read_lines(args.input)
     vent_count_part1 = defaultdict(int)
     vent_count_part2 = defaultdict(int)
     for line in data:

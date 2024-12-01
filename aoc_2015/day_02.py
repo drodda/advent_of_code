@@ -23,7 +23,7 @@ def calculate_ribon(dims):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test))
+    data = read_lines(args.input)
 
     result_1 = 0
     result_2 = 0

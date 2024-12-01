@@ -79,7 +79,7 @@ def main():
     args = parse_args()
     bricks = [
         Brick(*map(int, line.replace("~", ",").split(",")))
-        for line in read_lines(input_file_path_main(test=args.test))
+        for line in read_lines(args.input)
     ]
 
     result_part1, result_part2 = solve(bricks)

@@ -158,7 +158,7 @@ def calculate_enclosed_region(data, path):
 
 def main():
     args = parse_args()
-    data = read_lines(input_file_path_main(test=args.test), to_list=True)
+    data = read_lines(args.input, to_list=True)
 
     log.always("Part 1:")
     path = find_path(data)

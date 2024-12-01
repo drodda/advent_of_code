@@ -48,7 +48,7 @@ def calculate_cost(resource_map, resource, qtty_required=1, extra_resources=None
 
 def main():
     args = parse_args()
-    lines = read_lines(input_file_path_main(test=args.test))
+    lines = read_lines(args.input)
     resource_map = {}
     for line in lines:
         _resource, _qtty_made, _inputs = parse_line(line)
