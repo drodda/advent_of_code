@@ -124,24 +124,24 @@ def read_list_int(file_path, strip=True, to_list=False):
     return result
 
 
-def _csv_to_int(line, to_list=False):
-    result = map(int, line.strip().split(","))
+def _csv_to_int(line, sep=",", to_list=False):
+    result = map(int, line.strip().split(sep))
     if to_list:
         return list(result)
     return result
 
 
-def read_csv_int(file_path, to_list=False):
+def read_csv_int(file_path, sep=",", to_list=False):
     """ Read a single-line CSV, return a list of strings """
     with open(file_path) as f:
-        return _csv_to_int(f.read(), to_list=to_list)
+        return _csv_to_int(f.read(), sep=sep, to_list=to_list)
 
 
-def read_csv_int_multiline(file_path, to_list=False):
+def read_csv_int_multiline(file_path, sep=",", to_list=False):
     """ Read a single-line CSV, return a list of lists of strings """
     with open(file_path) as f:
         for line in f:
-            yield _csv_to_int(line, to_list=to_list)
+            yield _csv_to_int(line, sep=sep, to_list=to_list)
 
 
 def read_multilines(file_path, join=False, join_str=" "):
