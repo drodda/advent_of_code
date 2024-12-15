@@ -34,6 +34,7 @@ def parse_args(args_func=None):
     parser.add_argument("input", help="Input file")
     parser.add_argument('-p', '--part', type=int, choices=ALL_PARTS, default=None)
     parser.add_argument('-v', '--verbose', action='count', default=0)
+    parser.add_argument('-t', '--test', action='store_true')
     if args_func:
         args_func(parser)
     args = parser.parse_args()
